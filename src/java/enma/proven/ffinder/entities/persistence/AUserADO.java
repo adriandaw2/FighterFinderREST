@@ -80,8 +80,9 @@ public class AUserADO {
                 aU.setNick(rs.getString(2));
                 aU.setEmail(rs.getString(3));
                 aU.setPassword(rs.getString(4));
-                aU.setIdProfile(rs.getInt(5));
-                aU.setIdObjective(rs.getInt(6));
+                aU.setSkill(rs.getInt(5));
+                aU.setIdProfile(rs.getInt(6));
+                aU.setIdObjective(rs.getInt(7));
             }
         }catch(SQLException ex)
         {

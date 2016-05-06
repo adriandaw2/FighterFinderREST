@@ -47,22 +47,19 @@ CREATE TABLE `profile`(
 )ENGINE=InnoDB;
 
 CREATE TABLE `user_game`(
-	id INT(6),
 	user_id INT(6),
 	game_id INT(6)
 )ENGINE=InnoDB;
 
 CREATE TABLE `user_character`(
-	id INT(6),
 	user_id INT(6),
 	character_id INT(6)
 )ENGINE=InnoDB;
 
 CREATE TABLE `user_skill_rates`(
-	id INT(8),
 	user_id_who_rate INT(6),
 	user_rated INT(6),
-	skill_rate INT(5)
+	skill_rate INT(1)
 )ENGINE=InnoDB;
 
 ALTER TABLE `objective`
@@ -81,13 +78,13 @@ ALTER TABLE `profile`
 	MODIFY id INT AUTO_INCREMENT PRIMARY KEY;
 	
 ALTER TABLE `user_game`
-	MODIFY id INT AUTO_INCREMENT PRIMARY KEY;
+	ADD PRIMARY KEY (user_id, game_id);
 	
 ALTER TABLE `user_character`
-	MODIFY id INT AUTO_INCREMENT PRIMARY KEY;
+	ADD PRIMARY KEY (user_id, character_id);
 
 ALTER TABLE `user_skill_rates`
-	MODIFY id INT AUTO_INCREMENT PRIMARY KEY;
+	ADD PRIMARY KEY (user_id_who_rate, user_rated);
 
 ALTER TABLE `user`
 	ADD FOREIGN KEY (id_objective) REFERENCES `objective` (id),
@@ -142,9 +139,7 @@ INSERT INTO `user` (nick, email, password, skill, id_profile, id_objective) VALU
 	('FFAdmin', 'ffadmin@gmail.com', 'admin@pass1234', 5, 1, 1),('Nemo', 'nemoemail@gmail.com', 'nemo1234', 3, 2, 4), ('Person', 'personemail@gmail.com', 'person1234', 3, 2, 2);
 	
 INSERT INTO `user_game` (user_id, game_id) VALUES
-	(1, 1), (1, 2), (1, 3), (2, 9), (2, 10),
-	(1, 1), (1, 2), (1, 3), (2, 9), (2, 10);
-	
+	(2, 1), (2, 2), (2, 3), (3, 9), (3, 10);
 	
 /*TRIGGER*/	
 DELIMITER $$
@@ -161,4 +156,3 @@ BEGIN
 END; $$
 
 DELIMITER ;
-

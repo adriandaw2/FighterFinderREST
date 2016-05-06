@@ -9,6 +9,7 @@ public class AUser {
     private String nick;
     private String email;
     private String password;
+    private int skill;
     private int idProfile;
     private int idObjective;
 
@@ -29,15 +30,17 @@ public class AUser {
         this.nick = nick;
         this.email = email;
         this.password = password;
+        this.skill = 3;
         this.idProfile = 2;
         this.idObjective = 1;
     }
     
-    public AUser(int id, String nick, String email, String password, int idProfile, int idObjective) {
+    public AUser(int id, String nick, String email, String password, int skill, int idProfile, int idObjective) {
         this.id = id;
         this.nick = nick;
         this.email = email;
         this.password = password;
+        this.skill = skill;
         this.idProfile = idProfile;
         this.idObjective = idObjective;
     }
@@ -82,7 +85,14 @@ public class AUser {
         this.email = email;
     }
 
+    public int getSkill() {
+        return skill;
+    }
 
+    public void setSkill(int skill) {
+        this.skill = skill;
+    }
+    
     public int getIdObjective() {
         return idObjective;
     }
@@ -137,6 +147,8 @@ public class AUser {
         sb.append(password);
         sb.append(", [email]:");
         sb.append(email);
+        sb.append(", [skill]:");
+        sb.append(skill);
         sb.append(", [idObjective]:");
         sb.append(idObjective);
         sb.append(", [idProfile]:");

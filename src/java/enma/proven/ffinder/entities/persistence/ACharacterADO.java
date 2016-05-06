@@ -80,4 +80,9 @@ public class ACharacterADO {
         }
         return aCharList;
     }
+    
+    
+    /**
+     * addCharacterToUser
+     */
 }
