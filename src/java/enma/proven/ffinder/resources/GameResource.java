@@ -51,6 +51,23 @@ public class GameResource {
     }
     
     /**
+     * getGamesUserDontPlayFromDatabase
+     * Function to get all the games in the database
+     * @param uID
+     * @return Response
+     */
+    @POST
+    @Path("getGameNoPlayUser")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getGamesUserDontPlayFromDatabase(@FormParam("userID") int uID)
+    {
+        aGameService = new GameService();
+        Collection<AGame> allGamesList = aGameService.getGamesUserDontPlayFromDatabase(uID);
+        GenericEntity<Collection<AGame>> result = new GenericEntity<Collection<AGame>>(allGamesList){};
+        return Response.ok().entity(result).build();
+    }
+    
+    /**
      * addGameToUser
      * Function to add a game to one use
      * @param uID

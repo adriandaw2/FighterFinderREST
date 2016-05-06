@@ -30,7 +30,7 @@ public class AGameADO {
     
     //SQL SENTENCES
     static final String GET_ALL_GAMES= "SELECT * FROM game;";
-    static final String GET_GAMES_USER_DONT_PLAY = "";
+    static final String GET_GAMES_USER_DONT_PLAY = "SELECT DISTINCT g.id, g.name FROM `game` g JOIN `user_game` ug ON g.id NOT IN (SELECT ugs.game_id FROM `user_game` ugs WHERE ugs.user_id = ?)";
     static final String ADD_GAME_TO_USER = "INSERT INTO `user_game` (user_id, game_id) VALUES (?, ?)";
 
     public AGameADO() {
@@ -77,7 +77,7 @@ public class AGameADO {
             }
         }catch(SQLException ex)
         {
-            
+            ex.printStackTrace(System.out);
         }
         finally{
                 try {
@@ -116,7 +116,7 @@ public class AGameADO {
             }
         }catch(SQLException ex)
         {
-            
+            ex.printStackTrace(System.out);
         }
         finally{
                 try {

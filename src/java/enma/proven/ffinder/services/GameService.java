@@ -39,7 +39,7 @@ public class GameService {
      */
     public List<AGame> getGamesUserDontPlayFromDatabase(int uID)
     {
-        List<AGame> aGameList = myADO.getAllGamesFromDatabase();
+        List<AGame> aGameList = myADO.getGamesUserDontPlayFromDatabase(uID);
         
         return aGameList;
     }
