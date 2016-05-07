@@ -31,6 +31,8 @@ public class ACharacterADO {
     
     //SQL SENTENCES
     static final String GET_GAME_CHARACTERS = "SELECT * FROM `character` WHERE id_game = ?";
+    //static final String GET_USER_CHARACTERS= "SELECT * FROM `user_`"
+    static final String ADD_CHARACTER_TO_USER = "INSERT INTO `user_character` (user_id, character_id) VALUES (?, ?)";
 
     public ACharacterADO() {
         prepareAndSetConection();
@@ -79,5 +81,39 @@ public class ACharacterADO {
             ex.printStackTrace(System.out);
         }
         return aCharList;
+    }
+    
+    
+    /**
+     * addCharacterToUser
+     * Function that will return an 1 if the character had been added correctly, 0 if not, and -1 if something happened in the DDBB
+     * @param uID
+     * @param cID
+     * @return int
+     */
+    public int addCharacterToUser(int uID, int cID)
+    {
+        int result = 0;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(ADD_CHARACTER_TO_USER);
+            pstmt.setInt(1, uID);
+            pstmt.setInt(2, cID);
+            result = pstmt.executeUpdate();
+        }catch(SQLException ex){
+            ex.printStackTrace(System.out);
+            result = -1;
+        }
+        finally{
+                try {
+                    pstmt.close();
+                    conn.close();
+                } catch (SQLException ex) {
+                    System.out.println("Could not close all the DB stuff");
+                } 
+            }
+        return result;
     }
 }
