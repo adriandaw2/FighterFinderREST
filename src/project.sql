@@ -10,8 +10,8 @@ CREATE USER 'standuser'@'%' IDENTIFIED BY 'normal4321@';
 GRANT ALL PRIVILEGES ON fighterfinderdb.* TO 'adminff'@'localhost' WITH GRANT OPTION;
 GRANT ALL PRIVILEGES ON fighterfinderdb.* TO 'adminff'@'%' WITH GRANT OPTION;
 
-GRANT SELECT, INSERT, DELETE ON fighterfinderdb.* TO 'standuser'@'localhost';
-GRANT SELECT, INSERT, DELETE ON fighterfinderdb.* TO 'standuser'@'%';
+GRANT SELECT, INSERT ON fighterfinderdb.* TO 'standuser'@'localhost';
+GRANT SELECT, INSERT ON fighterfinderdb.* TO 'standuser'@'%';
 
 USE fighterfinderdb;
 
@@ -20,10 +20,10 @@ CREATE TABLE `user` (
 	nick VARCHAR(30),
 	email VARCHAR(100),
 	password VARCHAR(100),
-        ubication VARCHAR(100),
-	skill INT(1),
-	id_profile INT(1),
-	id_objective INT(6)
+        ubication VARCHAR(100) DEFAULT 'Somewhere',
+	skill INT(1) DEFAULT 3,
+	id_profile INT(1) DEFAULT 2,
+	id_objective INT(2) DEFAULT 1
 )ENGINE=InnoDB;
 
 CREATE TABLE `game`(
@@ -63,6 +63,15 @@ CREATE TABLE `user_skill_rates`(
 	skill_rate INT(1)
 )ENGINE=InnoDB;
 
+GRANT UPDATE, DELETE ON fighterfinderdb.`user` TO 'standuser'@'localhost' IDENTIFIED BY 'normal4321@';
+GRANT UPDATE, DELETE ON fighterfinderdb.`user` TO 'standuser'@'%' IDENTIFIED BY 'normal4321@';
+GRANT UPDATE, DELETE ON fighterfinderdb.`user_game` TO 'standuser'@'localhost' IDENTIFIED BY 'normal4321@';
+GRANT UPDATE, DELETE ON fighterfinderdb.`user_game` TO 'standuser'@'%' IDENTIFIED BY 'normal4321@';
+GRANT UPDATE, DELETE ON fighterfinderdb.`user_character` TO 'standuser'@'localhost' IDENTIFIED BY 'normal4321@';
+GRANT UPDATE, DELETE ON fighterfinderdb.`user_character` TO 'standuser'@'%' IDENTIFIED BY 'normal4321@';
+GRANT UPDATE, DELETE ON fighterfinderdb.`user_skill_rates` TO 'standuser'@'localhost' IDENTIFIED BY 'normal4321@';
+GRANT UPDATE, DELETE ON fighterfinderdb.`user_skill_rates` TO 'standuser'@'%' IDENTIFIED BY 'normal4321@';
+
 ALTER TABLE `objective`
 	MODIFY id INT AUTO_INCREMENT PRIMARY KEY;
 
@@ -94,7 +103,7 @@ ALTER TABLE `user`
 	MODIFY email VARCHAR(100) NOT NULL UNIQUE,
 	MODIFY password VARCHAR(100) NOT NULL,
 	MODIFY skill INT(1) NOT NULL,
-        ALTER ubication SET DEFAULT 'Somewhere',
+        MODIFY ubication VARCHAR(100) NOT NULL,
 	ALTER skill SET DEFAULT 3,
 	ALTER id_profile SET DEFAULT 2,
 	ALTER id_objective SET DEFAULT 1;
@@ -137,8 +146,10 @@ INSERT INTO `character` (name, id_game) VALUES
 INSERT INTO `objective` (message) VALUES
 	('Searching for friends'), ('Having fun'), ('Compete'), ('I want to be the very best');
 	
-INSERT INTO `user` (nick, email, password, skill, id_profile, id_objective) VALUES 
-	('FFAdmin', 'ffadmin@gmail.com', 'admin@pass1234', 5, 1, 1),('Nemo', 'nemoemail@gmail.com', 'nemo1234', 3, 2, 4), ('Person', 'personemail@gmail.com', 'person1234', 3, 2, 2);
+/*INSERT INTO `user` (nick, email, password, skill, id_profile, id_objective) VALUES 
+	('FFAdmin', 'ffadmin@gmail.com', 'admin@pass1234', 5, 1, 1),('Nemo', 'nemoemail@gmail.com', 'nemo1234', 3, 2, 4), ('Person', 'personemail@gmail.com', 'person1234', 3, 2, 2);*/
+INSERT INTO `user` (nick, email, password) VALUES 
+	('FFAdmin', 'ffadmin@gmail.com', 'admin@pass1234'),('Nemo', 'nemoemail@gmail.com', 'nemo1234'), ('Person', 'personemail@gmail.com', 'person1234');
 	
 INSERT INTO `user_game` (user_id, game_id) VALUES
 	(1, 1);
@@ -161,3 +172,4 @@ BEGIN
 END; $$
 
 DELIMITER ;
+

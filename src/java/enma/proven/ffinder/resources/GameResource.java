@@ -23,7 +23,6 @@ import javax.ws.rs.core.Response;
  * @author Alumne
  */
 @Path("game")
-//@Produces({"application/xml", "application/json"})
 public class GameResource {
     GameService aGameService;
 

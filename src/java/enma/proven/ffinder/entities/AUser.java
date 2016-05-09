@@ -27,10 +27,9 @@ public class AUser {
         this.email = email;
     }
     
-    public AUser(int id, String nick, String email, String password, int idObjective) {
+    public AUser(int id, String nick, String password, int idObjective) {
         this.id = id;
         this.nick = nick;
-        this.email = email;
         this.password = password;
         this.idObjective = idObjective;
     }

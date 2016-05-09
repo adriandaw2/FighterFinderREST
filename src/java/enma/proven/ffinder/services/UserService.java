@@ -82,11 +82,12 @@ public class UserService {
      * modifyUser
      * Function to modify the user in the DDBB
      * @param aUser
+     * @param currentName
      * @return in
      */
-    public int modifyUser(AUser aUser)
+    public int modifyUser(AUser aUser, String currentNick)
     {
-        int result = this.myADO.modifyUserInDatabase(aUser);
+        int result = this.myADO.modifyUserInDatabase(aUser, currentNick);
         
         return result;
     }
