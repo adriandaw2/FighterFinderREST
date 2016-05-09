@@ -9,6 +9,7 @@ public class AUser {
     private String nick;
     private String email;
     private String password;
+    private String ubication;
     private int skill;
     private int idProfile;
     private int idObjective;
@@ -24,6 +25,14 @@ public class AUser {
         this.id = id;
         this.nick = nick;
         this.email = email;
+    }
+    
+    public AUser(int id, String nick, String email, String password, int idObjective) {
+        this.id = id;
+        this.nick = nick;
+        this.email = email;
+        this.password = password;
+        this.idObjective = idObjective;
     }
     
     public AUser(String nick, String email, String password) {
@@ -83,6 +92,14 @@ public class AUser {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getUbication() {
+        return ubication;
+    }
+
+    public void setUbication(String ubication) {
+        this.ubication = ubication;
     }
 
     public int getSkill() {

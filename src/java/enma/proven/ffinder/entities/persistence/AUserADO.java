@@ -33,6 +33,7 @@ public class AUserADO {
     static final String CHECK_USER_NICK = "SELECT nick FROM `user` WHERE nick = ?";
     static final String CHECK_USER_EMAIL = "SELECT email FROM `user` WHERE email = ?";
     static final String CHECK_USER_NICK_EMAIL = "SELECT nick, email FROM `user` WHERE nick = ? OR email = ?";
+    static final String MOD_USER = "UPDATE `user` SET nick, password, idObjective VALUES (?, ?, ?) WHERE id = ?";
     public AUserADO() {
         prepareAndSetConection();
     }
@@ -193,5 +194,42 @@ public class AUserADO {
             } 
         }
         return res;
+    }
+    
+    /**
+     * modifyUserInDatabase
+     * Function to modify a user in the database
+     * @param aUser
+     * @return int
+     */
+    public int modifyUserInDatabase(AUser aUser) {
+        int aRes  = checkIfUserExistToAdd(aUser);
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        if(aRes == 0)
+        {
+            try{
+                conn = dataSource.getConnection();
+                pstmt = conn.prepareStatement(MOD_USER);
+                pstmt.setString(1, aUser.getNick());
+                pstmt.setString(2, aUser.getPassword());
+                pstmt.setInt(3, aUser.getIdObjective());
+                pstmt.setInt(4, aUser.getId());
+                aRes = pstmt.executeUpdate();
+            }catch(SQLException ex)
+            {
+                ex.printStackTrace(System.out);
+            }
+            finally{
+                try {
+                    pstmt.close();
+                    conn.close();
+                } catch (SQLException ex) {
+                    System.out.println("Could not close all the DB stuff");
+                } 
+            }
+        }
+        
+        return aRes;
     }
 }

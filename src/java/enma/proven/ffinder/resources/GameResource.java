@@ -82,4 +82,20 @@ public class GameResource {
         int result = aGameService.addGameToUser(uID, gID);
         return Response.ok(result).build();
     }
+    
+    /**
+     * deletGameFromUser
+     * Function to delete a game from a User
+     * @param uID
+     * @param gID
+     * @return Response
+     */
+    @POST
+    @Path("deleteGameUser")
+    public Response deletGameFromUser(@FormParam("userID") int uID, @FormParam("gameID") int gID)
+    {
+        aGameService = new GameService();
+        int result = aGameService.deleteGameFromUser(uID, gID);
+        return Response.ok(result).build();
+    }
 }

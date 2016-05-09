@@ -20,6 +20,7 @@ CREATE TABLE `user` (
 	nick VARCHAR(30),
 	email VARCHAR(100),
 	password VARCHAR(100),
+        ubication VARCHAR(100),
 	skill INT(1),
 	id_profile INT(1),
 	id_objective INT(6)
@@ -93,6 +94,7 @@ ALTER TABLE `user`
 	MODIFY email VARCHAR(100) NOT NULL UNIQUE,
 	MODIFY password VARCHAR(100) NOT NULL,
 	MODIFY skill INT(1) NOT NULL,
+        ALTER ubication SET DEFAULT 'Somewhere',
 	ALTER skill SET DEFAULT 3,
 	ALTER id_profile SET DEFAULT 2,
 	ALTER id_objective SET DEFAULT 1;
@@ -139,7 +141,10 @@ INSERT INTO `user` (nick, email, password, skill, id_profile, id_objective) VALU
 	('FFAdmin', 'ffadmin@gmail.com', 'admin@pass1234', 5, 1, 1),('Nemo', 'nemoemail@gmail.com', 'nemo1234', 3, 2, 4), ('Person', 'personemail@gmail.com', 'person1234', 3, 2, 2);
 	
 INSERT INTO `user_game` (user_id, game_id) VALUES
-	(2, 1), (2, 2), (2, 3), (3, 9), (3, 10);
+	(1, 1);
+
+INSERT INTO `user_character` (user_id, character_id) VALUES
+        (1, 1);
 	
 /*TRIGGER*/	
 DELIMITER $$

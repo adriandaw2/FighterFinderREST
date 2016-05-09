@@ -39,15 +39,51 @@ public class CharacterResource {
      * getCharacterFromDatabase
      * Function to return all the character from one game
      * @param aGameID
+     * @param aUserID
      * @return Response
      */
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCharacterFromDatabase(@FormParam("gameid") int aGameID)
+    public Response getCharacterFromDatabase(@FormParam("gameID") int aGameID, @FormParam("userID") int aUserID)
     {
-        Collection<ACharacter> aCharCollection = aCharService.getAllCharacterFromGame(aGameID);
+        aCharService = new CharacterService();
+        Collection<ACharacter> aCharCollection = aCharService.getAllCharacterFromGame(aGameID, aUserID);
         GenericEntity<Collection<ACharacter>> result = new GenericEntity<Collection<ACharacter>>(aCharCollection){};
         return Response.ok().entity(result).build();       
+    }
+    
+    /**
+     * addCharacterToUser
+     * Function to add a cahracter to a user.
+     * @param uID
+     * @param cID
+     * @return Response
+     */
+    @POST
+    @Path("addCharToUser")
+    public Response addCharacterToUser(@FormParam("userID") int uID, @FormParam("charID") int cID)
+    {
+        aCharService = new CharacterService();
+        int result = aCharService.addCharacerToUser(uID, cID);
+
+        return Response.ok(result).build();
+    }
+    
+    
+    /**
+     * deletCharacterFromUser
+     * Function to delete a character from a User
+     * @param uID
+     * @param cID
+     * @return Response
+     */
+    @POST
+    @Path("deleteCharUser")
+    public Response deletCharacterFromUser(@FormParam("userid") int uID, @FormParam("characterid") int cID)
+    {
+        aCharService = new CharacterService();
+        int result = aCharService.deleteCHaracterFromUser(uID, cID);
+        return Response.ok(result).build();
     }
     
 }

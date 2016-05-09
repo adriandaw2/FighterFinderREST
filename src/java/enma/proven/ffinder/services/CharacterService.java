@@ -23,19 +23,45 @@ public class CharacterService {
     /**
      * getAllCharacterFromGame
      * Function to get all the character from one game
-     * @param int
+     * @param aGameID
+     * @param aUserID
      * @return List<ACharacter>
      */
-    public List<ACharacter> getAllCharacterFromGame(int aGameID)
+    public List<ACharacter> getAllCharacterFromGame(int aGameID, int aUserID)
     {
-        List<ACharacter> aCharList = this.myADO.getAllCharacterFromGame(aGameID);
+        List<ACharacter> aCharList = this.myADO.getAllCharacterFromGame(aGameID, aUserID);
         return aCharList;
     }
     
     
     /**
      * addCharacerToUser
+     * Function to know if the character is added
+     * @param uID
+     * @param cID
+     * @return int
      */
+    public int addCharacerToUser(int uID, int cID)
+    {
+        int result = this.myADO.addCharacterToUser(uID, cID);
+        
+        return result;
+    }
+    
+    
+    /**
+     * deleteCHaracterFromUser
+     * Function to know if the delete SQL worked correctly
+     * @param uID
+     * @param cID
+     * @return int
+     */
+    public int deleteCHaracterFromUser(int uID, int cID)
+    {
+        int result = this.myADO.deleteCharacterUser(uID, cID);
+        
+        return result;
+    }
     
     
     

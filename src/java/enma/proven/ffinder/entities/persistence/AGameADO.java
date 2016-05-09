@@ -32,6 +32,7 @@ public class AGameADO {
     static final String GET_ALL_GAMES= "SELECT * FROM game;";
     static final String GET_GAMES_USER_DONT_PLAY = "SELECT DISTINCT g.id, g.name FROM `game` g JOIN `user_game` ug ON g.id NOT IN (SELECT ugs.game_id FROM `user_game` ugs WHERE ugs.user_id = ?)";
     static final String ADD_GAME_TO_USER = "INSERT INTO `user_game` (user_id, game_id) VALUES (?, ?)";
+    static final String DELETE_GAME_USER = "DELETE FROM `user_game` WHERE user_id = ? AND game_id = ?";
 
     public AGameADO() {
         prepareAndSetConection();
@@ -162,6 +163,40 @@ public class AGameADO {
                 } catch (SQLException ex) {
                     System.out.println("Could not close all the DB stuff");
                 } 
+            }
+        return result;
+    }
+    
+    /**
+     * removeGameFromPlayer
+     * Functon to delete a game from a player
+     * @param gID
+     * @param uID
+     * @return int
+     */
+    public int removeGameFromPlayer(int uID, int gID)
+    {
+        int result = 0;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        //check if the user is playing already the game
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(DELETE_GAME_USER);
+            pstmt.setInt(1, uID);
+            pstmt.setInt(2, gID);
+            result = pstmt.executeUpdate();
+        }catch(SQLException ex){
+            ex.printStackTrace(System.out);
+            result = -1;
+        }
+        finally{
+                try {
+                    pstmt.close();
+                    conn.close();
+                } catch (SQLException ex) {
+                    System.out.println("Could not close all the DB stuff");
+                }
             }
         return result;
     }

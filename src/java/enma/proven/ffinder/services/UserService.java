@@ -77,4 +77,17 @@ public class UserService {
         
         return result;
     }
+    
+    /**
+     * modifyUser
+     * Function to modify the user in the DDBB
+     * @param aUser
+     * @return in
+     */
+    public int modifyUser(AUser aUser)
+    {
+        int result = this.myADO.modifyUserInDatabase(aUser);
+        
+        return result;
+    }
 }

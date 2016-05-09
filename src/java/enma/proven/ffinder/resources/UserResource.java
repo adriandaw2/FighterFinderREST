@@ -56,6 +56,14 @@ public class UserResource {
         return Response.ok(aU).build();
     }
     
+    /**
+     * addUserToDatabase
+     * Function to add a new user
+     * @param aNewNick
+     * @param aNewEmail
+     * @param aNewPass
+     * @return 
+     */
     @Path("add")
     @POST
     public Response addUserToDatabase(@FormParam("aNick") String aNewNick, @FormParam("aEmail") String aNewEmail, @FormParam("aPass") String aNewPass)
@@ -64,9 +72,31 @@ public class UserResource {
         aUserService = new UserService();
         AUser aU = new AUser(aNewNick, aNewEmail, aNewPass);
         result = aUserService.addUserToDatabase(aU);
-        String strResult = String.valueOf(result);
-        return Response.ok(strResult).build();
+        return Response.ok(result).build();
     }
+    
+    /**
+     * modUserFromDatabase
+     * Function to add a new user
+     * @param aUserID
+     * @param aNewNick
+     * @param aNewEmail
+     * @param aNewPass
+     * @param aIdObjective
+     * @return 
+     */
+    @Path("mod")
+    @POST
+    public Response modUserFromDatabase(@FormParam("aUserID") int aUserID, @FormParam("aNick") String aNewNick, @FormParam("aEmail") String aNewEmail, @FormParam("aPass") String aNewPass, @FormParam("aIdObjective") int aIdObjective)
+    {
+        int result = 0;
+        aUserService = new UserService();
+        AUser aU = new AUser(aUserID, aNewNick, aNewEmail, aNewPass, aIdObjective);
+        result = aUserService.modifyUser(aU);
+        return Response.ok(result).build();
+    }
+    
+    
     
     /**
      * getInstancedAUser
