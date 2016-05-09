@@ -33,6 +33,7 @@ public class AUserADO {
     static final String CHECK_USER_NICK = "SELECT nick FROM `user` WHERE nick = ?";
     static final String CHECK_USER_EMAIL = "SELECT email FROM `user` WHERE email = ?";
     static final String CHECK_USER_NICK_EMAIL = "SELECT nick, email FROM `user` WHERE nick = ? OR email = ?";
+    static final String MOD_USER = "UPDATE `user` SET nick = ?, password = ?, id_objective = ? WHERE id = ?";
     public AUserADO() {
         prepareAndSetConection();
     }
@@ -80,9 +81,10 @@ public class AUserADO {
                 aU.setNick(rs.getString(2));
                 aU.setEmail(rs.getString(3));
                 aU.setPassword(rs.getString(4));
-                aU.setSkill(rs.getInt(5));
-                aU.setIdProfile(rs.getInt(6));
-                aU.setIdObjective(rs.getInt(7));
+                aU.setUbication(rs.getString(5));
+                aU.setSkill(rs.getInt(6));
+                aU.setIdProfile(rs.getInt(7));
+                aU.setIdObjective(rs.getInt(8));
             }
         }catch(SQLException ex)
         {
@@ -193,5 +195,48 @@ public class AUserADO {
             } 
         }
         return res;
+    }
+    
+    /**
+     * modifyUserInDatabase
+     * Function to modify a user in the database
+     * @param aUser
+     * @param currentNick
+     * @return int
+     */
+    public int modifyUserInDatabase(AUser aUser, String currentNick) {
+        int aRes = checkIfUserExistToAdd(aUser);
+        //This is for check if the user didn't change the nickname
+        if(aRes == -1 && aUser.getNick().equals(currentNick))
+        {
+            aRes = 0;
+        }
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        if(aRes == 0)
+        {
+            try{
+                conn = dataSource.getConnection();
+                pstmt = conn.prepareStatement(MOD_USER);
+                pstmt.setString(1, aUser.getNick());
+                pstmt.setString(2, aUser.getPassword());
+                pstmt.setInt(3, aUser.getIdObjective());
+                pstmt.setInt(4, aUser.getId());
+                aRes = pstmt.executeUpdate();
+            }catch(SQLException ex)
+            {
+                ex.printStackTrace(System.out);
+            }
+            finally{
+                try {
+                    pstmt.close();
+                    conn.close();
+                } catch (SQLException ex) {
+                    System.out.println("Could not close all the DB stuff");
+                } 
+            }
+        }
+        
+        return aRes;
     }
 }

@@ -24,7 +24,6 @@ import javax.ws.rs.core.Response;
  * @author Alumne
  */
 @Path("user")
-@Produces({"application/xml", "application/json"})
 public class UserResource {
     UserService aUserService;
 
@@ -56,6 +55,14 @@ public class UserResource {
         return Response.ok(aU).build();
     }
     
+    /**
+     * addUserToDatabase
+     * Function to add a new user
+     * @param aNewNick
+     * @param aNewEmail
+     * @param aNewPass
+     * @return 
+     */
     @Path("add")
     @POST
     public Response addUserToDatabase(@FormParam("aNick") String aNewNick, @FormParam("aEmail") String aNewEmail, @FormParam("aPass") String aNewPass)
@@ -64,9 +71,31 @@ public class UserResource {
         aUserService = new UserService();
         AUser aU = new AUser(aNewNick, aNewEmail, aNewPass);
         result = aUserService.addUserToDatabase(aU);
-        String strResult = String.valueOf(result);
-        return Response.ok(strResult).build();
+        return Response.ok(result).build();
     }
+    
+    /**
+     * modUserFromDatabase
+     * Function to add a new user
+     * @param aUserID
+     * @param aNewNick
+     * @param aNewPass
+     * @param aIdObjective
+     * @param currentNick
+     * @return 
+     */
+    @Path("mod")
+    @POST
+    public Response modUserFromDatabase(@FormParam("userID") int aUserID, @FormParam("nick") String aNewNick, @FormParam("pass") String aNewPass, @FormParam("idObjective") int aIdObjective, @FormParam("currentNick") String currentNick)
+    {
+        int result = 0;
+        aUserService = new UserService();
+        AUser aU = new AUser(aUserID, aNewNick, aNewPass, aIdObjective);
+        result = aUserService.modifyUser(aU, currentNick);
+        return Response.ok(result).build();
+    }
+    
+    
     
     /**
      * getInstancedAUser

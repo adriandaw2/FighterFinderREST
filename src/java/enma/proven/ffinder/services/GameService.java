@@ -57,4 +57,19 @@ public class GameService {
         
         return result;
     }
-}
+    
+    
+    /**
+     * deleteGameFromUser
+     * Function to delete a game from one user
+     * @param uID
+     * @param gID
+     * @return int
+     */
+    public int deleteGameFromUser(int uID, int gID)
+    {
+        int result = this.myADO.removeGameFromPlayer(uID, gID);
+        
+        return result;
+    }
+}   

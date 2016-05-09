@@ -23,7 +23,6 @@ import javax.ws.rs.core.Response;
  * @author Alumne
  */
 @Path("game")
-//@Produces({"application/xml", "application/json"})
 public class GameResource {
     GameService aGameService;
 
@@ -80,6 +79,22 @@ public class GameResource {
     {
         aGameService = new GameService();
         int result = aGameService.addGameToUser(uID, gID);
+        return Response.ok(result).build();
+    }
+    
+    /**
+     * deletGameFromUser
+     * Function to delete a game from a User
+     * @param uID
+     * @param gID
+     * @return Response
+     */
+    @POST
+    @Path("deleteGameUser")
+    public Response deletGameFromUser(@FormParam("userID") int uID, @FormParam("gameID") int gID)
+    {
+        aGameService = new GameService();
+        int result = aGameService.deleteGameFromUser(uID, gID);
         return Response.ok(result).build();
     }
 }

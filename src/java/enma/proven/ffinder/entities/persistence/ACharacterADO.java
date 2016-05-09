@@ -31,8 +31,10 @@ public class ACharacterADO {
     
     //SQL SENTENCES
     static final String GET_GAME_CHARACTERS = "SELECT * FROM `character` WHERE id_game = ?";
+    static final String GET_GAME_CHARACTER_USER = "SELECT c.id, c.name FROM `character` c LEFT OUTER JOIN `user_character` uc ON c.id NOT IN (SELECT ucs.character_id FROM `user_character` ucs WHERE ucs.user_id = ?) WHERE c.id_game = ?";
     //static final String GET_USER_CHARACTERS= "SELECT * FROM `user_`"
     static final String ADD_CHARACTER_TO_USER = "INSERT INTO `user_character` (user_id, character_id) VALUES (?, ?)";
+    static final String DELETE_CHARACTER_USER = "DELETE FROM `user_character` WHERE user_id = ? AND character_id = ?";
 
     public ACharacterADO() {
         prepareAndSetConection();
@@ -57,9 +59,10 @@ public class ACharacterADO {
      * getAllCharacterFromGame
      * Function that returns all the characters from one game
      * @param aGameID
+     * @param aUserID
      * @return List<ACharacter>
      */
-    public List<ACharacter> getAllCharacterFromGame(int aGameID)
+    public List<ACharacter> getAllCharacterFromGame(int aGameID, int aUserID)
     {
         List<ACharacter> aCharList = new ArrayList();
         Connection conn = null;
@@ -68,8 +71,9 @@ public class ACharacterADO {
         ACharacter aCh = null;
         try{
             conn = dataSource.getConnection();
-            pstmt = conn.prepareStatement(GET_GAME_CHARACTERS);
-            pstmt.setInt(1, aGameID);
+            pstmt = conn.prepareStatement(GET_GAME_CHARACTER_USER);
+            pstmt.setInt(1, aUserID);
+            pstmt.setInt(2, aGameID);
             rs = pstmt.executeQuery();
             while(rs.next())
             {
@@ -99,6 +103,40 @@ public class ACharacterADO {
         try{
             conn = dataSource.getConnection();
             pstmt = conn.prepareStatement(ADD_CHARACTER_TO_USER);
+            pstmt.setInt(1, uID);
+            pstmt.setInt(2, cID);
+            result = pstmt.executeUpdate();
+        }catch(SQLException ex){
+            ex.printStackTrace(System.out);
+            result = -1;
+        }
+        finally{
+                try {
+                    pstmt.close();
+                    conn.close();
+                } catch (SQLException ex) {
+                    System.out.println("Could not close all the DB stuff");
+                } 
+            }
+        return result;
+    }
+    
+    
+    /**
+     * deleteCharacterUser
+     * Function to delete a character from the player
+     * @param uID
+     * @param cID
+     * @return int
+     */
+    public int deleteCharacterUser(int uID, int cID)
+    {
+        int result = 0;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(DELETE_CHARACTER_USER);
             pstmt.setInt(1, uID);
             pstmt.setInt(2, cID);
             result = pstmt.executeUpdate();
