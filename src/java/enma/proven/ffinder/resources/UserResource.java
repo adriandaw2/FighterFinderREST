@@ -6,8 +6,11 @@
 
 package enma.proven.ffinder.resources;
 
+import enma.proven.ffinder.entities.AGame;
 import enma.proven.ffinder.entities.AUser;
 import enma.proven.ffinder.services.UserService;
+import java.util.Collection;
+import java.util.List;
 import javax.servlet.ServletContext;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -16,6 +19,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -93,6 +97,40 @@ public class UserResource {
         AUser aU = new AUser(aUserID, aNewNick, aNewPass, aIdObjective);
         result = aUserService.modifyUser(aU, currentNick);
         return Response.ok(result).build();
+    }
+    
+    /**
+     * searchUserByNickname
+     * FUnction to get all the results from the search query
+     * @param nickToSearch
+     * @return Response
+     */
+    @Path("searchUserByNickname")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response searchUserByNickname(@FormParam("nickToSearch") String nickToSearch)
+    {
+        aUserService = new UserService();
+        Collection<AUser> aUserList = aUserService.searchUserByNickname(nickToSearch);
+        GenericEntity<Collection<AUser>> result = new GenericEntity<Collection<AUser>>(aUserList){};
+        return Response.ok().entity(result).build();
+    }
+    
+    /**
+     * searchUserByNickname
+     * FUnction to get all the results from the search query
+     * @param gameToSearch
+     * @return Response
+     */
+    @Path("searchUserByGame")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response searchUserByNickname(@FormParam("gameToSearch") int gameToSearch)
+    {
+        aUserService = new UserService();
+        Collection<AUser> aUserList = aUserService.searchUserByGame(gameToSearch);
+        GenericEntity<Collection<AUser>> result = new GenericEntity<Collection<AUser>>(aUserList){};
+        return Response.ok().entity(result).build();
     }
     
     
