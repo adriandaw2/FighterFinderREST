@@ -13,20 +13,25 @@ public class AUser {
     private int skill;
     private int idProfile;
     private int idObjective;
-
+    private String objectiveMsg;
+    
+    //empty contructor
     public AUser() {
     }
-
+    
+    //only id constructor
     public AUser(int id) {
         this.id = id;
     }
-
+    
+    //login constructor
     public AUser(int id, String nick, String email) {
         this.id = id;
         this.nick = nick;
         this.email = email;
     }
     
+    //mod user constructor
     public AUser(int id, String nick, String password, int idObjective) {
         this.id = id;
         this.nick = nick;
@@ -43,6 +48,16 @@ public class AUser {
         this.idObjective = 1;
     }
     
+    //search user constructor
+    public AUser(int id, String nick, String email, int skill, int idObjective) {
+        this.id = id;
+        this.nick = nick;
+        this.email = email;
+        this.skill = skill;
+        this.idObjective = idObjective;
+    }
+    
+    //full constructor
     public AUser(int id, String nick, String email, String password, int skill, int idProfile, int idObjective) {
         this.id = id;
         this.nick = nick;
@@ -116,6 +131,16 @@ public class AUser {
     public void setIdObjective(int idObjective) {
         this.idObjective = idObjective;
     }
+
+    public String getObjectiveMsg() {
+        return objectiveMsg;
+    }
+
+    public void setObjectiveMsg(String objectiveMsg) {
+        this.objectiveMsg = objectiveMsg;
+    }
+    
+    
 
     @Override
     public int hashCode() {

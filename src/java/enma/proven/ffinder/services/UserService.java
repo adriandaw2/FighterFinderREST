@@ -7,6 +7,7 @@
 package enma.proven.ffinder.services;
 import enma.proven.ffinder.entities.AUser;
 import enma.proven.ffinder.entities.persistence.AUserADO;
+import java.util.List;
 
 /**
  *
@@ -82,7 +83,7 @@ public class UserService {
      * modifyUser
      * Function to modify the user in the DDBB
      * @param aUser
-     * @param currentName
+     * @param currentNick
      * @return in
      */
     public int modifyUser(AUser aUser, String currentNick)
@@ -90,5 +91,31 @@ public class UserService {
         int result = this.myADO.modifyUserInDatabase(aUser, currentNick);
         
         return result;
+    }
+    
+    /**
+     * searchUserByNickname
+     * Function to get all the results of the searhc of one nickname
+     * @param nickToSearch
+     * @return List<AUser>
+     */
+    public List<AUser> searchUserByNickname(String nickToSearch)
+    {
+        List<AUser> aList = this.myADO.searchUsersByNickname(nickToSearch);
+        
+        return aList;
+    }
+    
+    /**
+     * searchUserByNickname
+     * Function to get all the results of the search of all the user that play one game
+     * @param gID
+     * @return List<AUser>
+     */
+    public List<AUser> searchUserByGame(int gID)
+    {
+        List<AUser> aList = this.myADO.searchUserByGame(gID);
+        
+        return aList;
     }
 }
