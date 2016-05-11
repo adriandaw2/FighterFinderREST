@@ -126,7 +126,7 @@ ALTER TABLE `user_game`
 	ADD FOREIGN KEY (game_id) REFERENCES `game` (id);
 
 ALTER TABLE `user_character`
-	ADD FOREIGN KEY (user_id) REFERENCES `user` (id),
+	ADD FOREIGN KEY (user_id) REFERENCES `user` (id),   
 	ADD FOREIGN KEY (character_id) REFERENCES `character` (id);
 	
 ALTER TABLE `user_skill_rates`
