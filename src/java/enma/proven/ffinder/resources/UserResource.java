@@ -6,6 +6,7 @@
 
 package enma.proven.ffinder.resources;
 
+import com.google.gson.Gson;
 import enma.proven.ffinder.entities.AUser;
 import enma.proven.ffinder.services.UserService;
 import java.util.Collection;
@@ -47,15 +48,17 @@ public class UserResource {
     public Response userExist(@FormParam("nick") String aNick, @FormParam("password") String aPassword)
     {
         String dataMsg ="No exist";
+        Gson gson = new Gson();
         aUserService = new UserService(aNick, aPassword);
         AUser aU = aUserService.getUserFromDatabase();
         HashMap<String, Object> aMap = new HashMap();
         aMap.put("user", aU);
+        String jsonString = gson.toJson(aMap);
         /*if(aU != null)
         {
             dataMsg=aU.toString();
         }*/
-        return Response.ok(aMap).build();
+        return Response.ok().entity(jsonString).build();
     }
     
     /**
@@ -112,6 +115,7 @@ public class UserResource {
         aUserService = new UserService();
         Collection<AUser> aUserList = aUserService.searchUserByNickname(nickToSearch);
         GenericEntity<Collection<AUser>> result = new GenericEntity<Collection<AUser>>(aUserList){};
+        
         return Response.ok().entity(result).build();
     }
     
