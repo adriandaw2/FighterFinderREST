@@ -1,9 +1,12 @@
 package enma.proven.ffinder.entities;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  *
  * @author Alumne
  */
+@XmlRootElement
 public class AUser {
     private int id;
     private String nick;
