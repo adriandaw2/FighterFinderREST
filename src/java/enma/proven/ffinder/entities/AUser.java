@@ -11,6 +11,10 @@ public class AUser {
     private String password;
     private String ubication;
     private int skill;
+    private boolean avaible;
+    private boolean showinmap;
+    private float glat;
+    private float glon;
     private int idProfile;
     private int idObjective;
     private String objectiveMsg;
@@ -49,21 +53,29 @@ public class AUser {
     }
     
     //search user constructor
-    public AUser(int id, String nick, String email, int skill, int idObjective) {
+    public AUser(int id, String nick, String email, int skill, boolean avaible, boolean showinmap, float glat, float glon, int idObjective) {
         this.id = id;
         this.nick = nick;
         this.email = email;
         this.skill = skill;
+        this.avaible = avaible;
+        this.showinmap = showinmap;
+        this.glat = glat;
+        this.glon = glon;
         this.idObjective = idObjective;
     }
     
     //full constructor
-    public AUser(int id, String nick, String email, String password, int skill, int idProfile, int idObjective) {
+    public AUser(int id, String nick, String email, String password, int skill, boolean avaible, boolean showinmap, float glat, float glon, int idProfile, int idObjective) {
         this.id = id;
         this.nick = nick;
         this.email = email;
         this.password = password;
         this.skill = skill;
+        this.avaible = avaible;
+        this.showinmap = showinmap;
+        this.glat = glat;
+        this.glon = glon;
         this.idProfile = idProfile;
         this.idObjective = idObjective;
     }
@@ -123,6 +135,40 @@ public class AUser {
     public void setSkill(int skill) {
         this.skill = skill;
     }
+
+    public boolean isAvaible() {
+        return avaible;
+    }
+
+    public void setAvaible(boolean avaible) {
+        this.avaible = avaible;
+    }
+
+    public boolean isShowinmap() {
+        return showinmap;
+    }
+
+    public void setShowinmap(boolean showinmap) {
+        this.showinmap = showinmap;
+    }
+
+    public float getGlat() {
+        return glat;
+    }
+
+    public void setGlat(float glat) {
+        this.glat = glat;
+    }
+
+    public float getGlon() {
+        return glon;
+    }
+
+    public void setGlon(float glon) {
+        this.glon = glon;
+    }
+    
+    
     
     public int getIdObjective() {
         return idObjective;
