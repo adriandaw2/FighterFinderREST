@@ -21,7 +21,7 @@ CREATE TABLE `user` (
 	email VARCHAR(100),
 	password VARCHAR(100),
         ubication VARCHAR(100) DEFAULT 'Somewhere',
-	skill INT(1) DEFAULT 3,
+	skill INT(1) DEFAULT 3 NOT NULL,
 	id_profile INT(1) DEFAULT 2,
 	id_objective INT(2) DEFAULT 1
 )ENGINE=InnoDB;
@@ -102,7 +102,6 @@ ALTER TABLE `user`
 	MODIFY nick VARCHAR(30) NOT NULL UNIQUE,
 	MODIFY email VARCHAR(100) NOT NULL UNIQUE,
 	MODIFY password VARCHAR(100) NOT NULL,
-	MODIFY skill INT(1) NOT NULL,
         MODIFY ubication VARCHAR(100) NOT NULL,
 	ALTER skill SET DEFAULT 3,
 	ALTER id_profile SET DEFAULT 2,
