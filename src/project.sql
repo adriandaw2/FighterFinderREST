@@ -22,6 +22,10 @@ CREATE TABLE `user` (
 	password VARCHAR(100),
         ubication VARCHAR(100),
 	skill INT(1),
+        avaible TINYINT(1),
+        showinmap TINYINT(1),
+        glat DECIMAL(15),
+        glon DECIMAL(15),
 	id_profile INT(1) DEFAULT 2,
 	id_objective INT(2) DEFAULT 1
 )ENGINE=InnoDB;
@@ -103,7 +107,11 @@ ALTER TABLE `user`
 	MODIFY email VARCHAR(100) NOT NULL UNIQUE,
 	MODIFY password VARCHAR(100) NOT NULL,
         MODIFY skill INT(1) DEFAULT 3 NOT NULL,
-        MODIFY ubication VARCHAR(100)DEFAULT 'Somewhere' NOT NULL;
+        MODIFY ubication VARCHAR(100)DEFAULT 'Somewhere' NOT NULL,
+        MODIFY avaible TINYINT(1) DEFAULT 0 NOT NULL,
+        MODIFY showinmap TINYINT(1) DEFAULT 1 NOT NULL,
+        MODIFY glat DECIMAL(15) DEFAULT 0.0 NOT NULL,
+        MODIFY glon DECIMAL(15) DEFAULT 0.0 NOT NULL;        
 
 ALTER TABLE `game`
 	MODIFY name VARCHAR(100) NOT NULL;
