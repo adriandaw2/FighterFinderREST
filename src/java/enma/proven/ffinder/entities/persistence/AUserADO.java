@@ -87,8 +87,12 @@ public class AUserADO {
                 aU.setPassword(rs.getString(4));
                 aU.setUbication(rs.getString(5));
                 aU.setSkill(rs.getInt(6));
-                aU.setIdProfile(rs.getInt(7));
-                aU.setIdObjective(rs.getInt(8));
+                aU.setAvaible(rs.getBoolean(7));
+                aU.setShowinmap(rs.getBoolean(8));
+                aU.setGlat(rs.getFloat(9));
+                aU.setGlon(rs.getFloat(10));
+                aU.setIdProfile(rs.getInt(11));
+                aU.setIdObjective(rs.getInt(12));
             }
         }catch(SQLException ex)
         {

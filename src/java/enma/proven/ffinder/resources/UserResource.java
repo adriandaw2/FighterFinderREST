@@ -6,17 +6,14 @@
 
 package enma.proven.ffinder.resources;
 
-import enma.proven.ffinder.entities.AGame;
 import enma.proven.ffinder.entities.AUser;
 import enma.proven.ffinder.services.UserService;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
 import javax.servlet.ServletContext;
 import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
@@ -52,11 +49,13 @@ public class UserResource {
         String dataMsg ="No exist";
         aUserService = new UserService(aNick, aPassword);
         AUser aU = aUserService.getUserFromDatabase();
+        HashMap<String, Object> aMap = new HashMap();
+        aMap.put("user", aU);
         /*if(aU != null)
         {
             dataMsg=aU.toString();
         }*/
-        return Response.ok(aU).build();
+        return Response.ok(aMap).build();
     }
     
     /**

@@ -75,7 +75,7 @@ public class UserService {
     public int addUserToDatabase(AUser nU)
     {
         int result = myADO.addUserToDatabase(nU);
-        
+        //create email class and use send method
         return result;
     }
     
