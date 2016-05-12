@@ -11,6 +11,8 @@ import enma.proven.ffinder.entities.AUser;
 import enma.proven.ffinder.services.UserService;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
+import javax.naming.directory.SearchResult;
 import javax.servlet.ServletContext;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
@@ -113,27 +115,29 @@ public class UserResource {
     public Response searchUserByNickname(@FormParam("nickToSearch") String nickToSearch)
     {
         aUserService = new UserService();
-        Collection<AUser> aUserList = aUserService.searchUserByNickname(nickToSearch);
-        GenericEntity<Collection<AUser>> result = new GenericEntity<Collection<AUser>>(aUserList){};
-        
-        return Response.ok().entity(result).build();
+        Gson gson = new Gson();
+        List<AUser> aList = aUserService.searchUserByNickname(nickToSearch);
+        String resultJson = gson.toJson(aList);
+        //return Response.ok(result).build();
+        return Response.ok().entity(resultJson).build();
     }
     
     /**
-     * searchUserByNickname
-     * FUnction to get all the results from the search query
+     * searchUserByGame
+     * Function to get all the results from the search query
      * @param gameToSearch
      * @return Response
      */
     @Path("searchUserByGame")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Response searchUserByNickname(@FormParam("gameToSearch") int gameToSearch)
+    public Response searchUserByGame(@FormParam("gameToSearch") int gameToSearch)
     {
         aUserService = new UserService();
-        Collection<AUser> aUserList = aUserService.searchUserByGame(gameToSearch);
-        GenericEntity<Collection<AUser>> result = new GenericEntity<Collection<AUser>>(aUserList){};
-        return Response.ok().entity(result).build();
+        Gson gson = new Gson();
+        List<AUser> aList = aUserService.searchUserByGame(gameToSearch);
+        String resultJson = gson.toJson(aList);
+        return Response.ok().entity(resultJson).build();
     }
     
     

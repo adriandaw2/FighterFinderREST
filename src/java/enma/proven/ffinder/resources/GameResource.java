@@ -5,9 +5,11 @@
  */
 package enma.proven.ffinder.resources;
 
+import com.google.gson.Gson;
 import enma.proven.ffinder.entities.AGame;
 import enma.proven.ffinder.services.GameService;
 import java.util.Collection;
+import java.util.List;
 import javax.servlet.ServletContext;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
@@ -44,9 +46,12 @@ public class GameResource {
     public Response getAllGamesFromDatabase()
     {
         aGameService = new GameService();
-        Collection<AGame> allGamesList = aGameService.getAllGamesFromDatabase();
-        GenericEntity<Collection<AGame>> result = new GenericEntity<Collection<AGame>>(allGamesList){};
-        return Response.ok().entity(result).build();
+        //Collection<AGame> allGamesList = aGameService.getAllGamesFromDatabase();
+        //GenericEntity<Collection<AGame>> result = new GenericEntity<Collection<AGame>>(allGamesList){};
+        Gson gson = new Gson();
+        List<AGame> aList = aGameService.getAllGamesFromDatabase();
+        String jsonResult = gson.toJson(aList);
+        return Response.ok().entity(jsonResult).build();
     }
     
     /**
@@ -61,9 +66,12 @@ public class GameResource {
     public Response getGamesUserDontPlayFromDatabase(@FormParam("userID") int uID)
     {
         aGameService = new GameService();
-        Collection<AGame> allGamesList = aGameService.getGamesUserDontPlayFromDatabase(uID);
-        GenericEntity<Collection<AGame>> result = new GenericEntity<Collection<AGame>>(allGamesList){};
-        return Response.ok().entity(result).build();
+        //Collection<AGame> allGamesList = aGameService.getGamesUserDontPlayFromDatabase(uID);
+        //GenericEntity<Collection<AGame>> result = new GenericEntity<Collection<AGame>>(allGamesList){};
+        Gson gson = new Gson();
+        List<AGame> aList = aGameService.getGamesUserDontPlayFromDatabase(uID);
+        String jsonResult = gson.toJson(aList);
+        return Response.ok().entity(jsonResult).build();
     }
     
     /**

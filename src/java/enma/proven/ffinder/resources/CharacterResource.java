@@ -5,9 +5,11 @@
  */
 package enma.proven.ffinder.resources;
 
+import com.google.gson.Gson;
 import enma.proven.ffinder.entities.ACharacter;
 import enma.proven.ffinder.services.CharacterService;
 import java.util.Collection;
+import java.util.List;
 import javax.servlet.ServletContext;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
@@ -47,9 +49,12 @@ public class CharacterResource {
     public Response getCharacterFromDatabase(@FormParam("gameID") int aGameID, @FormParam("userID") int aUserID)
     {
         aCharService = new CharacterService();
-        Collection<ACharacter> aCharCollection = aCharService.getAllCharacterFromGame(aGameID, aUserID);
-        GenericEntity<Collection<ACharacter>> result = new GenericEntity<Collection<ACharacter>>(aCharCollection){};
-        return Response.ok().entity(result).build();       
+        //Collection<ACharacter> aCharCollection = aCharService.getAllCharacterFromGame(aGameID, aUserID);
+        //GenericEntity<Collection<ACharacter>> result = new GenericEntity<Collection<ACharacter>>(aCharCollection){};
+        Gson gson = new Gson();
+        List<ACharacter> aList = aCharService.getAllCharacterFromGame(aGameID, aUserID);
+        String jsonResult = gson.toJson(aList);
+        return Response.ok().entity(jsonResult).build();       
     }
     
     /**

@@ -239,6 +239,14 @@ public class AUser {
         sb.append(email);
         sb.append(", [skill]:");
         sb.append(skill);
+        sb.append(", [avaible]:");
+        sb.append(avaible);
+        sb.append(", [showinmap]:");
+        sb.append(showinmap);
+        sb.append(", [glat]:");
+        sb.append(glat);
+        sb.append(", [glon]:");
+        sb.append(glon);
         sb.append(", [idObjective]:");
         sb.append(idObjective);
         sb.append(", [idProfile]:");
