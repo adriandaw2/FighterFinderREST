@@ -5,6 +5,7 @@
  */
 
 package enma.proven.ffinder.services;
+import enma.proven.ffinder.entities.AEmail;
 import enma.proven.ffinder.entities.AUser;
 import enma.proven.ffinder.entities.persistence.AUserADO;
 import java.util.List;
@@ -75,7 +76,12 @@ public class UserService {
     public int addUserToDatabase(AUser nU)
     {
         int result = myADO.addUserToDatabase(nU);
-        //create email class and use send method
+        if(result == 1)
+        {
+            //create email class and use send method
+            AEmail aMail = new AEmail(nU.getEmail());
+            aMail.sendEmailConfirmation();
+        }
         return result;
     }
     
@@ -117,5 +123,32 @@ public class UserService {
         List<AUser> aList = this.myADO.searchUserByGame(gID);
         
         return aList;
+    }
+    
+    
+    /**
+     * activateUserAccount
+     * Function to activate the user account
+     * @param uMail
+     * @return int
+     */
+    public int activateUserAccount(String uMail)
+    {
+        int result = this.myADO.activateUserAccountDDBB(uMail);
+        
+        return result;
+    }
+    
+    /**
+     * deactivateUserAccount
+     * Function to deactivate the user account
+     * @param uMail
+     * @return int
+     */
+    public int deactivateUserAccount(String uMail)
+    {
+        int result = this.myADO.deactivateUserAccountDDBB(uMail);
+        
+        return result;
     }
 }

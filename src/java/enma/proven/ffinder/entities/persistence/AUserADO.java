@@ -38,6 +38,10 @@ public class AUserADO {
     static final String CHECK_USER_EMAIL = "SELECT email FROM `user` WHERE email = ?";
     static final String CHECK_USER_NICK_EMAIL = "SELECT nick, email FROM `user` WHERE nick = ? OR email = ?";
     static final String MOD_USER = "UPDATE `user` SET nick = ?, password = ?, id_objective = ? WHERE id = ?";
+    
+    static final String CHECK_USER_AVAIBLE = "SELECT avaible FROM `user` WHERE email = ?";
+    static final String ACTIVATE_ACC = "UPDATE `user` SET avaible = 1 WHERE email = ?";
+    static final String DEACTIVATE_ACC = "UPDATE `user` SET avaible = 0 WHERE email = ?";
     public AUserADO() {
         prepareAndSetConection();
     }
@@ -354,5 +358,113 @@ public class AUserADO {
             } 
         }
         return aList;
+    }
+    
+    /**
+     * activateUserAccountDDBB
+     * Function to activate the user account, will return a 1 if everything is ok,0 if the user is already active or if couldn't update but the database is running, -1 if server error
+     * @param uMail
+     * @return int
+     */
+    public int activateUserAccountDDBB(String uMail) {
+        int result = checkUserIsActive(uMail);
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(ACTIVATE_ACC);
+            pstmt.setString(1, uMail);
+            if(result == 0)
+            {
+                result = pstmt.executeUpdate();
+            }
+        }catch(SQLException ex)
+        {
+            ex.printStackTrace(System.out);
+            result = -1;
+        }finally{
+            try {
+                pstmt.close();
+                conn.close();
+            } catch (SQLException ex) {
+                System.out.println("Could not close all the DB stuff");
+                result = -1;
+            } 
+        }
+        return result;
+    }
+    
+    /**
+     * deactivateUserAccountDDBB
+     * Function to deactivate the user account, will return a 1 if everything is ok,2 if the user is already active,
+     * 0 if couldn't update but the database is running, -1 if server error
+     * @param uMail
+     * @return int
+     */
+    public int deactivateUserAccountDDBB(String uMail) {
+        int result = checkUserIsActive(uMail);
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(DEACTIVATE_ACC);
+            pstmt.setString(1, uMail);
+            //if the user is active then deactive
+            if(result == 1)
+            {
+                result = pstmt.executeUpdate();
+            }
+        }catch(SQLException ex)
+        {
+            ex.printStackTrace(System.out);
+            result = -1;
+        }finally{
+            try {
+                pstmt.close();
+                conn.close();
+            } catch (SQLException ex) {
+                System.out.println("Could not close all the DB stuff");
+                result = -1;
+            } 
+        }
+        return result;
+    }
+    
+    /**
+     * checkUserIsActive
+     * Function to check if the user is already active
+     * @param uMail
+     * @return int
+     */
+    public int checkUserIsActive(String uMail)
+    {
+        int aRes = -1;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(CHECK_USER_AVAIBLE);
+            pstmt.setString(1, uMail);
+            rs = pstmt.executeQuery();
+            while(rs.next())
+            {
+                aRes = rs.getInt(1);
+            }
+        }catch(SQLException ex)
+        {
+            ex.printStackTrace(System.out);
+            aRes = -1;
+        }
+        finally{
+            try {
+                pstmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                System.out.println("Could not close all the DB stuff");
+            } 
+        }
+        return aRes;
     }
 }

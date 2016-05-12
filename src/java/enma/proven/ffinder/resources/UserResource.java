@@ -9,17 +9,16 @@ package enma.proven.ffinder.resources;
 import com.google.gson.Gson;
 import enma.proven.ffinder.entities.AUser;
 import enma.proven.ffinder.services.UserService;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import javax.naming.directory.SearchResult;
 import javax.servlet.ServletContext;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -115,7 +114,7 @@ public class UserResource {
     public Response searchUserByNickname(@FormParam("nickToSearch") String nickToSearch)
     {
         aUserService = new UserService();
-        Gson gson = new Gson();
+        Gson gson = new Gson(); 
         List<AUser> aList = aUserService.searchUserByNickname(nickToSearch);
         String resultJson = gson.toJson(aList);
         //return Response.ok(result).build();
@@ -138,6 +137,38 @@ public class UserResource {
         List<AUser> aList = aUserService.searchUserByGame(gameToSearch);
         String resultJson = gson.toJson(aList);
         return Response.ok().entity(resultJson).build();
+    }
+    
+    /**
+     * validateAccountUser
+     * Function to activate the user account
+     * @param uMail
+     * @return Response
+     */
+    @Path("activateAcc/{umail}")
+    @GET
+    public Response validateAccountUser(@PathParam("umail") String uMail)
+    {
+        aUserService = new UserService();
+        int result = 0;
+        result = aUserService.activateUserAccount(uMail);
+        return Response.ok().build();
+    }
+    
+    /**
+     * deactivateAccountUser
+     * Function to activate the user account
+     * @param uMail
+     * @return Response
+     */
+    @Path("deactivateAcc/{umail}")
+    @GET
+    public Response deactivateAccountUser(@PathParam("umail") String uMail)
+    {
+        aUserService = new UserService();
+        int result = 0;
+        result = aUserService.deactivateUserAccount(uMail);
+        return Response.ok().build();
     }
     
     
