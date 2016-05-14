@@ -67,6 +67,11 @@ CREATE TABLE `user_skill_rates`(
 	skill_rate INT(1)
 )ENGINE=InnoDB;
 
+CREATE TABLE `user_user_fav`(
+        user_id INT(6),
+        user_added_fav INT(6)
+)ENGINE=InnoDB;
+
 GRANT UPDATE, DELETE ON fighterfinderdb.`user` TO 'standuser'@'localhost' IDENTIFIED BY 'normal4321@';
 GRANT UPDATE, DELETE ON fighterfinderdb.`user` TO 'standuser'@'%' IDENTIFIED BY 'normal4321@';
 GRANT UPDATE, DELETE ON fighterfinderdb.`user_game` TO 'standuser'@'localhost' IDENTIFIED BY 'normal4321@';
@@ -75,6 +80,8 @@ GRANT UPDATE, DELETE ON fighterfinderdb.`user_character` TO 'standuser'@'localho
 GRANT UPDATE, DELETE ON fighterfinderdb.`user_character` TO 'standuser'@'%' IDENTIFIED BY 'normal4321@';
 GRANT UPDATE, DELETE ON fighterfinderdb.`user_skill_rates` TO 'standuser'@'localhost' IDENTIFIED BY 'normal4321@';
 GRANT UPDATE, DELETE ON fighterfinderdb.`user_skill_rates` TO 'standuser'@'%' IDENTIFIED BY 'normal4321@';
+GRANT UPDATE, DELETE ON fighterfinderdb.`user_user_fav` TO 'standuser'@'localhost' IDENTIFIED BY 'normal4321@';
+GRANT UPDATE, DELETE ON fighterfinderdb.`user_user_fav` TO 'standuser'@'%' IDENTIFIED BY 'normal4321@';
 
 ALTER TABLE `objective`
 	MODIFY id INT AUTO_INCREMENT PRIMARY KEY;
@@ -99,6 +106,9 @@ ALTER TABLE `user_character`
 
 ALTER TABLE `user_skill_rates`
 	ADD PRIMARY KEY (user_id_who_rate, user_rated);
+
+ALTER TABLE `user_user_fav`
+        ADD PRIMARY KEY (user_id, user_added_fav);
 
 ALTER TABLE `user`
 	ADD FOREIGN KEY (id_objective) REFERENCES `objective` (id),
@@ -139,6 +149,10 @@ ALTER TABLE `user_skill_rates`
 	ADD FOREIGN KEY (user_rated) REFERENCES `user` (id),
 	MODIFY skill_rate INT(1) NOT NULL;
 
+ALTER TABLE `user_user_fav`
+        ADD FOREIGN KEY (user_id) REFERENCES `user` (id),
+        ADD FOREIGN KEY (user_added_fav) REFERENCES `user` (id);
+
 INSERT INTO `profile` (profiletype) VALUES
 	('admin'), ('user');
 
@@ -161,6 +175,9 @@ INSERT INTO `user_game` (user_id, game_id) VALUES
 
 INSERT INTO `user_character` (user_id, character_id) VALUES
         (1, 1);
+
+INSERT INTO `user_user_fav` (user_id, user_added_fav) VALUES
+        (2, 3), (2, 4), (3, 2), (4, 5);
 	
 /*TRIGGER*/	
 DELIMITER $$

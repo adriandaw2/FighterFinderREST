@@ -140,6 +140,40 @@ public class UserResource {
     }
     
     /**
+     * addUserToFav
+     * Function to add a user to a user favorite list
+     * @param uID
+     * @param uToAddID
+     * @return Response
+     */
+    @POST
+    @Path("addUserToFav")
+    public Response addUserToFav(@FormParam("userid")int uID, @FormParam("useridtoadd")int uToAddID)
+    {
+        int result = 0;
+        aUserService = new UserService();
+        result = aUserService.addUserToFav(uID, uToAddID);
+        return Response.ok(result).build();
+    }
+    
+    /**
+     * deleteUserFromFav
+     * Function to delete a user from a user favorite list
+     * @param uID
+     * @param uToDeleteID
+     * @return Response
+     */
+    @POST
+    @Path("deleteUserFromFav")
+    public Response deleteUserFromFav(@FormParam("userid")int uID, @FormParam("useridtodelete")int uToDeleteID)
+    {
+        int result = 0;
+        aUserService = new UserService();
+        result = aUserService.deleteuserFromFav(uID, uToDeleteID);
+        return Response.ok(result).build();
+    }
+    
+    /**
      * validateAccountUser
      * Function to activate the user account
      * @param uMail

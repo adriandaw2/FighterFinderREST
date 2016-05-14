@@ -38,7 +38,10 @@ public class AUserADO {
     static final String CHECK_USER_EMAIL = "SELECT email FROM `user` WHERE email = ?";
     static final String CHECK_USER_NICK_EMAIL = "SELECT nick, email FROM `user` WHERE nick = ? OR email = ?";
     static final String MOD_USER = "UPDATE `user` SET nick = ?, password = ?, id_objective = ? WHERE id = ?";
-    
+    static final String ADD_USER_TO_FAV = "INSERT INTO `user_user_fav` (user_id, user_added_fav) VALUES (?, ?)";
+    static final String DELETE_USER_FROM_FAV = "DELETE FROM `user_user_fav` WHERE user_id = ? AND user_added_fav = ?";
+    //static final String GET_USER_FAVS = "SELECT DISTINCT u.id, u.nick, u.skill, u.ubication, u.id_profile, u.avaible, u.showinmap, u.glat, u.glon, u.id_objective FROM `user` u LEFT JOIN `user_user_fav` uf ON u.id IN (SELECT ufs.user_added_fav FROM `user_user_fav` ufs WHERE ufs.user_id = ?)";
+    //EMAIL STUFF
     static final String CHECK_USER_AVAIBLE = "SELECT avaible FROM `user` WHERE email = ?";
     static final String ACTIVATE_ACC = "UPDATE `user` SET avaible = 1 WHERE email = ?";
     static final String DEACTIVATE_ACC = "UPDATE `user` SET avaible = 0 WHERE email = ?";
@@ -155,59 +158,7 @@ public class AUserADO {
         return aRes;
     }
     
-    /**
-     * checkIfUserExistToAdd
-     * Function to check if the user already exist, will return -1 if nick already exist
-     * or -2 if email already exist or -3 if both are already in use
-     * @param AUser
-     * @return int
-     */
-    private int checkIfUserExistToAdd(AUser uToCheck)
-    {
-        int res = 0;
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        try{
-            conn = dataSource.getConnection();
-            pstmt = conn.prepareStatement(CHECK_USER_NICK_EMAIL);
-            pstmt.setString(1, uToCheck.getNick());
-            pstmt.setString(2, uToCheck.getEmail());
-            rs = pstmt.executeQuery();
-            while(rs.next())
-            {
-                if(rs.getString(1).equals(uToCheck.getNick()))
-                {
-                    res = -1;
-                }
-                if(rs.getString(2).equals(uToCheck.getEmail()))
-                {
-                    res = -2;
-                }
-                if((rs.getString(1).equals(uToCheck.getNick()) && rs.getString(2).equals(uToCheck.getEmail())))
-                {
-                    res = -3;
-                }
-                if(res != 0)
-                {
-                    break;
-                }
-            }
-        }catch(SQLException ex)
-        {
-            ex.printStackTrace(System.out);
-        }
-        finally{
-            try {
-                pstmt.close();
-                rs.close();
-                conn.close();
-            } catch (SQLException ex) {
-                System.out.println("Could not close all the DB stuff");
-            } 
-        }
-        return res;
-    }
+    
     
     /**
      * modifyUserInDatabase
@@ -360,6 +311,10 @@ public class AUserADO {
         return aList;
     }
     
+    
+    
+    
+    
     /**
      * activateUserAccountDDBB
      * Function to activate the user account, will return a 1 if everything is ok,0 if the user is already active or if couldn't update but the database is running, -1 if server error
@@ -428,6 +383,132 @@ public class AUserADO {
             } 
         }
         return result;
+    }
+    
+    /**
+     * addUserToFav
+     * Function to add a user to a user favorites
+     * @param uID
+     * @param uToAddID
+     * @return int
+     */
+    public int addUserToFav(int uID, int uToAddID)
+    {
+        //check if relation already exist
+        int result = 0;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(ADD_USER_TO_FAV);
+            pstmt.setInt(1, uID);
+            pstmt.setInt(2, uToAddID);
+            result = pstmt.executeUpdate();
+        }catch(SQLException ex)
+        {
+            result = -1;
+        }finally{
+            try{
+                conn.close();
+                pstmt.close();
+            }catch(SQLException ex)
+            {
+                System.out.println("Could not close all the DB stuff");
+                result = -1;
+            }
+        }
+        return result;
+    }
+    
+    /**
+     * deleteUserFromFav
+     * Function to delete a user from user favorites
+     * @param uID
+     * @param uToAddID
+     * @return int
+     */
+    public int deleteUserFromFav(int uID, int uToAddID)
+    {
+        //check if relation already exist
+        int result = 0;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(DELETE_USER_FROM_FAV);
+            pstmt.setInt(1, uID);
+            pstmt.setInt(2, uToAddID);
+            result = pstmt.executeUpdate();
+        }catch(SQLException ex)
+        {
+            result = -1;
+        }finally{
+            try{
+                conn.close();
+                pstmt.close();
+            }catch(SQLException ex)
+            {
+                System.out.println("Could not close all the DB stuff");
+                result = -1;
+            }
+        }
+        return result;
+    }
+    
+    //CHECKING METHODS
+    
+    /**
+     * checkIfUserExistToAdd
+     * Function to check if the user already exist, will return -1 if nick already exist
+     * or -2 if email already exist or -3 if both are already in use
+     * @param AUser
+     * @return int
+     */
+    private int checkIfUserExistToAdd(AUser uToCheck)
+    {
+        int res = 0;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(CHECK_USER_NICK_EMAIL);
+            pstmt.setString(1, uToCheck.getNick());
+            pstmt.setString(2, uToCheck.getEmail());
+            rs = pstmt.executeQuery();
+            while(rs.next())
+            {
+                if(rs.getString(1).equals(uToCheck.getNick()))
+                {
+                    res = -1;
+                }
+                if(rs.getString(2).equals(uToCheck.getEmail()))
+                {
+                    res = -2;
+                }
+                if((rs.getString(1).equals(uToCheck.getNick()) && rs.getString(2).equals(uToCheck.getEmail())))
+                {
+                    res = -3;
+                }
+                if(res != 0)
+                {
+                    break;
+                }
+            }
+        }catch(SQLException ex)
+        {
+            ex.printStackTrace(System.out);
+        }
+        finally{
+            try {
+                pstmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                System.out.println("Could not close all the DB stuff");
+            } 
+        }
+        return res;
     }
     
     /**

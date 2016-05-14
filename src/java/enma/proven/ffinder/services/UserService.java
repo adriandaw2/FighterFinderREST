@@ -151,4 +151,33 @@ public class UserService {
         
         return result;
     }
+    
+    
+    /**
+     * addUserToFav
+     * Function to add a user to a user fav
+     * @param uID
+     * @param uToAddID
+     * @return int
+     */
+    public int addUserToFav(int uID, int uToAddID)
+    {
+        int result = this.myADO.addUserToFav(uID, uToAddID);
+        
+        return result;
+    }
+    
+    /**
+     * deleteuserFromFav
+     * Function to delete a user from a user fav
+     * @param uID
+     * @param uToAddID
+     * @return int
+     */
+    public int deleteuserFromFav(int uID, int uToAddID)
+    {
+        int result = this.myADO.deleteUserFromFav(uID, uToAddID);
+        
+        return result;
+    }
 }
