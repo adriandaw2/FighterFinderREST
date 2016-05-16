@@ -140,6 +140,24 @@ public class UserResource {
     }
     
     /**
+     * getAllUserFavs
+     * Function to get all the user favs
+     * @param uID
+     * @return Response
+     */
+    @Path("getAllUserFavs")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllUserFavs(@FormParam("userid")int uID)
+    {
+        aUserService = new UserService();
+        Gson gson = new Gson();
+        List<AUser> aList = aUserService.getAllUserFav(uID);
+        String resultJson = gson.toJson(aList);
+        return Response.ok().entity(resultJson).build();
+    }
+    
+    /**
      * addUserToFav
      * Function to add a user to a user favorite list
      * @param uID

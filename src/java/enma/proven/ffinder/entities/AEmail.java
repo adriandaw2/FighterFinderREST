@@ -98,6 +98,8 @@ public class AEmail {
     public void sendEmailDeactivation()
     {
         try{
+            //link to activate the account
+            String linkToActivate = "";
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(this.fromWho));
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(this.toWho));

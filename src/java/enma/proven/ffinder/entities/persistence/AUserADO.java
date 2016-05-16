@@ -40,7 +40,7 @@ public class AUserADO {
     static final String MOD_USER = "UPDATE `user` SET nick = ?, password = ?, id_objective = ? WHERE id = ?";
     static final String ADD_USER_TO_FAV = "INSERT INTO `user_user_fav` (user_id, user_added_fav) VALUES (?, ?)";
     static final String DELETE_USER_FROM_FAV = "DELETE FROM `user_user_fav` WHERE user_id = ? AND user_added_fav = ?";
-    //static final String GET_USER_FAVS = "SELECT DISTINCT u.id, u.nick, u.skill, u.ubication, u.id_profile, u.avaible, u.showinmap, u.glat, u.glon, u.id_objective FROM `user` u LEFT JOIN `user_user_fav` uf ON u.id IN (SELECT ufs.user_added_fav FROM `user_user_fav` ufs WHERE ufs.user_id = ?)";
+    static final String GET_USER_FAVS = "SELECT DISTINCT u.id, u.nick, u.skill, u.ubication, u.id_profile, u.avaible, u.showinmap, u.glat, u.glon, u.id_objective FROM `user` u INNER JOIN `user_user_fav` uf ON u.id IN (SELECT ufs.user_added_fav FROM `user_user_fav` ufs WHERE ufs.user_id = ?)";
     //EMAIL STUFF
     static final String CHECK_USER_AVAIBLE = "SELECT avaible FROM `user` WHERE email = ?";
     static final String ACTIVATE_ACC = "UPDATE `user` SET avaible = 1 WHERE email = ?";
@@ -385,6 +385,62 @@ public class AUserADO {
         return result;
     }
     
+    
+    /**
+     * getAllUserFavs
+     * Function to get all the favorite user of that user
+     * @param uID
+     * @return List
+     */
+    public List<AUser> getAllUserFavs(int uID)
+    {
+        List<AUser> aList = new ArrayList();
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        AUser aU = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(GET_USER_FAVS);
+            pstmt.setInt(1, uID);
+            rs = pstmt.executeQuery();
+            while(rs.next())
+            {
+                //if the user is not admin and it's avaible
+                int test1 = rs.getInt(5);
+                boolean test2 = rs.getBoolean(6);
+                if(rs.getInt(5) != 1 && rs.getBoolean(6))
+                {
+                    
+                    aU = new AUser();
+                    aU.setId(rs.getInt(1));
+                    aU.setNick(rs.getString(2));
+                    aU.setSkill(rs.getInt(3));
+                    aU.setUbication(rs.getString(4));
+                    //aU.setAvaible(rs.getBoolean(6));
+                    aU.setShowinmap(rs.getBoolean(7));
+                    aU.setGlat(rs.getFloat(8));
+                    aU.setGlon(rs.getFloat(9));
+                    aU.setIdObjective(rs.getInt(10));
+                    aList.add(aU);
+                }
+                
+            }
+        }catch(SQLException ex)
+        {
+            ex.printStackTrace(System.out);
+        }
+        finally{
+            try {
+                pstmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                System.out.println("Could not close all the DB stuff");
+            } 
+        }
+        return aList;
+    }
     /**
      * addUserToFav
      * Function to add a user to a user favorites

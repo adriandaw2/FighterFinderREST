@@ -167,8 +167,10 @@ INSERT INTO `objective` (message) VALUES
 	
 /*INSERT INTO `user` (nick, email, password, skill, id_profile, id_objective) VALUES 
 	('FFAdmin', 'ffadmin@gmail.com', 'admin@pass1234', 5, 1, 1),('Nemo', 'nemoemail@gmail.com', 'nemo1234', 3, 2, 4), ('Person', 'personemail@gmail.com', 'person1234', 3, 2, 2);*/
-INSERT INTO `user` (nick, email, password) VALUES 
-	('FFAdmin', 'ffadmin@gmail.com', 'admin@pass1234'),('Nemo', 'nemoemail@gmail.com', 'nemo1234'), ('Person', 'personemail@gmail.com', 'person1234'), ('Test1', 'testemail@gmail.com', 'test11234'), ('Test2', 'test2email@gmail.com', 'test21234'), ('Test0', 'test0email@gmail.com', 'test01234');
+INSERT INTO `user` (nick, email, password, skill, id_profile, id_objective) VALUES 
+	('FFAdmin', 'ffadmin@gmail.com', 'admin@pass1234', 5, 1, 1);
+INSERT INTO `user` (nick, email, password) VALUES
+        ('Nemo', 'nemoemail@gmail.com', 'nemo1234'), ('Person', 'personemail@gmail.com', 'person1234'), ('Test1', 'testemail@gmail.com', 'test11234'), ('Test2', 'test2email@gmail.com', 'test21234'), ('Test0', 'test0email@gmail.com', 'test01234');
 	
 INSERT INTO `user_game` (user_id, game_id) VALUES
 	(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1);

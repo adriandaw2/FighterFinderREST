@@ -152,6 +152,18 @@ public class UserService {
         return result;
     }
     
+    /**
+     * getAllUserFav
+     * Function to get all the user fabs
+     * @param uID
+     * return List<AUser>
+     */
+    public List<AUser> getAllUserFav(int uID)
+    {
+        List<AUser> aList = this.myADO.getAllUserFavs(uID);
+        
+        return aList;
+    }
     
     /**
      * addUserToFav
