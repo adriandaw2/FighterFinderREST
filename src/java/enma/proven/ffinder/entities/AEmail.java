@@ -10,6 +10,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
@@ -25,16 +26,16 @@ public class AEmail {
     private String toWho;
     private String subject;
     private String msgText;
-    private String mailUser;
-    private String mailPass;
+    final private String mailUser = "fighterfinderinfo@gmail.com";
+    final private String mailPass = "fighter@623DPblock";
     private int idUser;
 
     public AEmail() {
     }
 
     public AEmail(String toWho) {
-        this.mailUser = "fighterfinderinfo@gmail.com";
-        this.mailPass = "fighter@623DPblock";
+        /*this.mailUser = "fighterfinderinfo@gmail.com";
+        this.mailPass = "fighter@623DPblock";*/
         setProperties();
         this.fromWho = this.mailUser;
         this.toWho = toWho;
@@ -43,26 +44,23 @@ public class AEmail {
     }
 
     private void setProperties() {
-        /*props = new Properties();
+        props = new Properties();
 		props.put("mail.smtp.host", "smtp.gmail.com");
 		props.put("mail.smtp.socketFactory.port", "465");
 		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.port", "465");*/
-        props = System.getProperties();
-        props.setProperty("mail.smtp.host", "localhost");
+		props.put("mail.smtp.port", "587");
         createSession();
     }
 
     private void createSession() {
-        /*session = Session.getDefaultInstance(props,
+        session = Session.getDefaultInstance(props,
 			new javax.mail.Authenticator() {
                                 @Override
 				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication(mailUser,mailPass);
+					return new PasswordAuthentication("fighterfinderinfo@gmail.com","fighter@623DPblock");
 				}
-			});*/
-        session = Session.getDefaultInstance(props);
+			});
     }
     
     
@@ -74,6 +72,8 @@ public class AEmail {
     public void sendEmailConfirmation()
     {
         try{
+            //link to activate the account
+            String linkToActivate = "";
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(this.fromWho));
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(this.toWho));
@@ -83,9 +83,11 @@ public class AEmail {
             sb.append("Please click the next link to activate your account int FighterFinder\n");
             sb.append("<a href='#'>Activate account</a>");
             this.msgText = sb.toString();
-            message.setText(this.msgText);
+            message.setContent(this.msgText, "text/html; charset=utf-8");
+            Transport.send(message);
         }catch(MessagingException ex)
         {
+            ex.printStackTrace(System.out);
             throw new RuntimeException(ex);
         }
     }
@@ -109,7 +111,9 @@ public class AEmail {
             sb.append("Please click the next link to deactivate your account in FighterFinder\n");
             sb.append("<a href='#'>Deactivate account</a>");
             this.msgText = sb.toString();
-            message.setText(this.msgText);
+            //message.setText(this.msgText);
+            message.setContent(this.msgText, "text/html; charset=utf-8");
+            Transport.send(message);
         }catch(MessagingException ex)
         {
             throw new RuntimeException(ex);
