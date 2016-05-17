@@ -124,6 +124,32 @@ public class AEmail {
             throw new RuntimeException(ex);
         }
     }
+
+    public void sendEmailRandomPassword(String nick, String password) {
+        try{
+            //link to activate the account
+            String linkToActivate = "http://provenapps.cat:8080/FighterFinderREST/ff/user/deactivateAcc/"+this.toWho;
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(this.fromWho));
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress(this.toWho));
+            
+            message.setSubject(this.subject);
+            StringBuilder sb = new StringBuilder();
+            sb.append("This is your information of your FighterFinder account\n");
+            sb.append("Name: <b>");
+            sb.append(nick);
+            sb.append("</b><br/>Password: <b>");
+            sb.append(password);
+            sb.append("</b><br/>We recommend you to change the password in the edit profile tab to a one more easier for you.");
+            this.msgText = sb.toString();
+            //message.setText(this.msgText);
+            message.setContent(this.msgText, "text/html; charset=utf-8");
+            Transport.send(message);
+        }catch(MessagingException ex)
+        {
+            throw new RuntimeException(ex);
+        }
+    }
     
     
 }

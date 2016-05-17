@@ -8,7 +8,11 @@ package enma.proven.ffinder.services;
 import enma.proven.ffinder.entities.AEmail;
 import enma.proven.ffinder.entities.AUser;
 import enma.proven.ffinder.entities.persistence.AUserADO;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -121,6 +125,49 @@ public class UserService {
     }
     
     /**
+     * sendEmailChangePassword
+     * Function to send a email with a random generated password
+     * Used when a user don't remember the password or the nickname
+     * @param uMail
+     * @return int
+     */
+    public int sendEmailChangePassword(String uMail)
+    {
+        String randPass = generateRandomPassword();
+        //password in MD5
+        String randPassMD5 = "";
+        int result = this.myADO.changeUserPasswordByEmail(uMail, randPass);
+        AUser aUser = null;
+        //change the method to use the two password
+        //the randPass to send the pass via email and the MD5 to insert the pass in the DDBB
+        
+        if(result == 1)
+        {
+            aUser = this.myADO.getUserByEmail(uMail);
+            //send email with the information
+            AEmail mail = new AEmail(aUser.getEmail());
+            mail.sendEmailRandomPassword(aUser.getNick(), randPass);
+        }
+        
+        return result;
+    }
+    
+    
+    /**
+     * changeCurrentPassword
+     * Function to change the current password
+     * @param uID
+     * @param newPass
+     * @return int
+     */
+    public int changeCurrentPassword(int uID, String newPass)
+    {
+        int result = this.myADO.changeCurrentPassword(uID, newPass);
+        
+        return result;
+    }
+    
+    /**
      * modifyUser
      * Function to modify the user in the DDBB
      * @param aUser
@@ -226,5 +273,47 @@ public class UserService {
         int result = this.myADO.deleteUserFromFav(uID, uToAddID);
         
         return result;
+    }
+    
+    /**
+     * generateRandomPassword
+     * Function that return a random password
+     * @return String
+     */
+    private String generateRandomPassword()
+    {
+        String charsForRandom = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        Random rng = new Random();
+        char[] text = new char[6];
+        for (int i = 0; i < 6; i++)
+        {
+            text[i] = charsForRandom.charAt(rng.nextInt(charsForRandom.length()));
+        }
+        return new String(text);
+    }
+    
+    /**
+     * getMD5
+     * Function to get a md5 hash from a string
+     * @param sToMD5
+     * @return String
+     */
+    private String getMD5(String sToMD5)
+    {
+        String toMD5 = "";
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] messageDigest = md.digest(sToMD5.getBytes());
+            BigInteger number = new BigInteger(1, messageDigest);
+            String hashtext = number.toString(16);
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
+            }
+            toMD5 = hashtext;
+        }
+        catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        return toMD5;
     }
 }

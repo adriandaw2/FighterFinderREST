@@ -192,6 +192,38 @@ public class UserResource {
     }
     
     /**
+     * sendRestorePassNickEmail
+     * Function to restore the password and to know the current nick of the account. It uses the email
+     * @param uEmail
+     * @return Response
+     */
+    @POST
+    @Path("restoreForgPass")
+    public Response sendRestorePassNickEmail(@FormParam("aEmail") String uEmail)
+    {
+        aUserService = new UserService();
+        int result = aUserService.sendEmailChangePassword(uEmail);
+        return Response.ok(result).build();
+    }
+    
+    /**
+     * changeCurrentPassword
+     * Function to change the current password
+     * @param uID
+     * @param newPass
+     * @return Response
+     */
+    @POST
+    @Path("changeCurrentPass")
+    public Response changeCurrentPassword(@FormParam("uid") int uID, @FormParam("newPass") String newPass)
+    {
+        aUserService = new UserService();
+        int result = aUserService.changeCurrentPassword(uID, newPass);
+        
+        return Response.ok(result).build();
+    }
+    
+    /**
      * sendEmailToActivate
      * Function to send an email to activate account
      * @param aEmail

@@ -42,6 +42,8 @@ public class AUserADO {
     static final String CHECK_USER_EMAIL = "SELECT email FROM `user` WHERE email = ?";
     static final String CHECK_USER_NICK_EMAIL = "SELECT nick, email FROM `user` WHERE nick = ? OR email = ?";
     static final String MOD_USER = "UPDATE `user` SET nick = ?, password = ?, id_objective = ? WHERE id = ?";
+    static final String CHANGE_USER_PASS_EMAIL = "UPDATE `user` SET password = ? WHERE email = ?";
+    static final String CHANGE_CURRENT_USER_PASS = "UPDATE `user` SET password = ? WHERE id = ?";
     static final String ADD_USER_TO_FAV = "INSERT INTO `user_user_fav` (user_id, user_added_fav) VALUES (?, ?)";
     static final String DELETE_USER_FROM_FAV = "DELETE FROM `user_user_fav` WHERE user_id = ? AND user_added_fav = ?";
     static final String GET_USER_FAVS = "SELECT DISTINCT u.id, u.nick, u.skill, u.ubication, u.id_profile, u.avaible, u.showinmap, u.glat, u.glon, u.id_objective FROM `user` u INNER JOIN `user_user_fav` uf ON u.id IN (SELECT ufs.user_added_fav FROM `user_user_fav` ufs WHERE ufs.user_id = ?)";
@@ -49,7 +51,7 @@ public class AUserADO {
     static final String CHECK_USER_AVAIBLE = "SELECT avaible FROM `user` WHERE email = ?";
     static final String ACTIVATE_ACC = "UPDATE `user` SET avaible = 1 WHERE email = ?";
     static final String DEACTIVATE_ACC = "UPDATE `user` SET avaible = 0 WHERE email = ?";
-    static final String GET_USER_BY_EMAIL = "SELECT id FROM `user` WHERE email = ?";
+    static final String GET_USER_BY_EMAIL = "SELECT id, nick, email FROM `user` WHERE email = ?";
     public AUserADO() {
         prepareAndSetConection();
     }
@@ -609,7 +611,13 @@ public class AUserADO {
         }
         return aRes;
     }
-
+    
+    /**
+     * checkUserExistByEmail
+     * Function to check if a user exist with that email
+     * @param aEmail
+     * @return int
+     */
     public int checkUserExistByEmail(String aEmail) {
         int aRes = -1;
         Connection conn = null;
@@ -640,5 +648,113 @@ public class AUserADO {
             } 
         }
         return aRes;
+    }
+    
+    /**
+     * getUserByEmail
+     * Function to get the user that just changed the password
+     * @param aEmail
+     * @return AUser
+     */
+    public AUser getUserByEmail(String aEmail)
+    {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        AUser aU = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(GET_USER_BY_EMAIL);
+            pstmt.setString(1, aEmail);
+            rs = pstmt.executeQuery();
+            while(rs.next())
+            {
+                aU = new AUser();
+                aU.setNick(rs.getString(2));
+                aU.setEmail(rs.getString(3));
+            }
+        }catch(SQLException ex)
+        {
+            ex.printStackTrace(System.out);
+        }
+        finally{
+            try {
+                pstmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                System.out.println("Could not close all the DB stuff");
+            } 
+        }
+        return aU;
+    }
+    
+    
+    /**
+     * changeUserPasswordByEmail
+     * Function to change the password in the DDBB, first is a test to see if the password changes, then the password
+     * will be in MD5
+     * @param uMail
+     * @param randPass
+     * @return int
+     */
+    public int changeUserPasswordByEmail(String uMail, String randPass) {
+        int result = 0;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(CHANGE_USER_PASS_EMAIL);
+            pstmt.setString(1, randPass);
+            pstmt.setString(2, uMail);
+            result = pstmt.executeUpdate();
+        }catch(SQLException ex)
+        {
+            result = -1;
+        }finally{
+            try{
+                conn.close();
+                pstmt.close();
+            }catch(SQLException ex)
+            {
+                result = -1;
+                System.out.println("Could not close all the DB stuff");
+            }
+        }
+        return result;
+    }
+    
+    /**
+     * changeCurrentPassword
+     * Function to change the current password of a user. Uses the ID to identify wich user is
+     * @param uID
+     * @param newPass
+     * @return int
+     */
+    public int changeCurrentPassword(int uID, String newPass)
+    {
+        int result = 0;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(CHANGE_CURRENT_USER_PASS);
+            pstmt.setString(1, newPass);
+            pstmt.setInt(2, uID);
+            result = pstmt.executeUpdate();
+        }catch(SQLException ex)
+        {
+            result = -1;
+        }finally{
+            try{
+                conn.close();
+                pstmt.close();
+            }catch(SQLException ex)
+            {
+                result = -1;
+                System.out.println("Could not close all the DB stuff");
+            }
+        }
+        return result;
     }
 }
