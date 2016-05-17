@@ -49,6 +49,7 @@ public class AUserADO {
     static final String CHECK_USER_AVAIBLE = "SELECT avaible FROM `user` WHERE email = ?";
     static final String ACTIVATE_ACC = "UPDATE `user` SET avaible = 1 WHERE email = ?";
     static final String DEACTIVATE_ACC = "UPDATE `user` SET avaible = 0 WHERE email = ?";
+    static final String GET_USER_BY_EMAIL = "SELECT id FROM `user` WHERE email = ?";
     public AUserADO() {
         prepareAndSetConection();
     }
@@ -591,6 +592,38 @@ public class AUserADO {
             while(rs.next())
             {
                 aRes = rs.getInt(1);
+            }
+        }catch(SQLException ex)
+        {
+            ex.printStackTrace(System.out);
+            aRes = -1;
+        }
+        finally{
+            try {
+                pstmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                System.out.println("Could not close all the DB stuff");
+            } 
+        }
+        return aRes;
+    }
+
+    public int checkUserExistByEmail(String aEmail) {
+        int aRes = -1;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(GET_USER_BY_EMAIL);
+            pstmt.setString(1, aEmail);
+            rs = pstmt.executeQuery();
+            aRes = 0;
+            while(rs.next())
+            {
+                aRes = 1;
             }
         }catch(SQLException ex)
         {

@@ -85,6 +85,41 @@ public class UserService {
         return result;
     }
     
+    
+    /**
+     * sendActivationEmail
+     * Method to send an activation email
+     * @param aEmail
+     * @return int
+     */
+    public int sendActivationEmail(String aEmail)
+    {
+        int result = this.myADO.checkUserExistByEmail(aEmail);
+        if(result == 1)
+        {
+            AEmail aMail = new AEmail(aEmail);
+            aMail.sendEmailConfirmation();
+        }
+        return result;
+    }
+    
+    /**
+     * sendDeactivationEmail
+     * Method to send an deactivation email
+     * @param aEmail
+     * @return int
+     */
+    public int sendDeactivationEmail(String aEmail)
+    {
+        int result = this.myADO.checkUserExistByEmail(aEmail);
+        if(result == 1)
+        {
+            AEmail aMail = new AEmail(aEmail);
+            aMail.sendEmailDeactivation();
+        }
+        return result;
+    }
+    
     /**
      * modifyUser
      * Function to modify the user in the DDBB

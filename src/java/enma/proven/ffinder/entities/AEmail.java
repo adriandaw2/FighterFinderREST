@@ -24,6 +24,7 @@ public class AEmail {
     private Session session;
     private String fromWho;
     private String toWho;
+    private String toWhoCip;
     private String subject;
     private String msgText;
     final private String mailUser = "fighterfinderinfo@gmail.com";
@@ -73,15 +74,17 @@ public class AEmail {
     {
         try{
             //link to activate the account
-            String linkToActivate = "";
+            String linkToActivate = "http://provenapps.cat:8080/FighterFinderREST/ff/user/activateAcc/"+this.toWho;
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(this.fromWho));
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(this.toWho));
             
             message.setSubject(this.subject);
             StringBuilder sb = new StringBuilder();
-            sb.append("Please click the next link to activate your account int FighterFinder\n");
-            sb.append("<a href='#'>Activate account</a>");
+            sb.append("Please click the next link to activate your account in FighterFinder\n");
+            sb.append("<a href=");
+            sb.append(linkToActivate);
+            sb.append(">Activate account</a>");
             this.msgText = sb.toString();
             message.setContent(this.msgText, "text/html; charset=utf-8");
             Transport.send(message);
@@ -101,7 +104,7 @@ public class AEmail {
     {
         try{
             //link to activate the account
-            String linkToActivate = "";
+            String linkToActivate = "http://provenapps.cat:8080/FighterFinderREST/ff/user/deactivateAcc/"+this.toWho;
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(this.fromWho));
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(this.toWho));
@@ -109,7 +112,9 @@ public class AEmail {
             message.setSubject(this.subject);
             StringBuilder sb = new StringBuilder();
             sb.append("Please click the next link to deactivate your account in FighterFinder\n");
-            sb.append("<a href='#'>Deactivate account</a>");
+            sb.append("<a href=");
+            sb.append(linkToActivate);
+            sb.append(">Deactivate account</a>");
             this.msgText = sb.toString();
             //message.setText(this.msgText);
             message.setContent(this.msgText, "text/html; charset=utf-8");

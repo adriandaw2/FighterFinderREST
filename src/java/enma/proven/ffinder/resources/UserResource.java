@@ -192,6 +192,39 @@ public class UserResource {
     }
     
     /**
+     * sendEmailToActivate
+     * Function to send an email to activate account
+     * @param aEmail
+     * @return Respone
+     */
+    @POST
+    @Path("sendEmailToActivate")
+    public Response sendEmailToActivate(@FormParam("uemail") String aEmail)
+    {
+        int result = 0;
+        aUserService = new UserService();
+        result = aUserService.sendActivationEmail(aEmail);
+        return Response.ok(result).build();
+    }
+    
+    /**
+     * sendEmailToDeactivate
+     * Function to send an email to deactivate account
+     * @param aEmail
+     * @return Respone
+     */
+    @POST
+    @Path("sendEmailToDeactivate")
+    public Response sendEmailToDeactivate(@FormParam("uemail") String aEmail)
+    {
+        int result = 0;
+        aUserService = new UserService();
+        result = aUserService.sendDeactivationEmail(aEmail);
+        return Response.ok(result).build();
+    }
+    
+    
+    /**
      * validateAccountUser
      * Function to activate the user account
      * @param uMail
