@@ -41,7 +41,7 @@ public class AUserADO {
     static final String CHECK_USER_NICK = "SELECT nick FROM `user` WHERE nick = ?";
     static final String CHECK_USER_EMAIL = "SELECT email FROM `user` WHERE email = ?";
     static final String CHECK_USER_NICK_EMAIL = "SELECT nick, email FROM `user` WHERE nick = ? OR email = ?";
-    static final String MOD_USER = "UPDATE `user` SET nick = ?, password = ?, id_objective = ? WHERE id = ?";
+    static final String MOD_USER = "UPDATE `user` SET nick = ?, password = ?, ubication = ?, id_objective = ? WHERE id = ?";
     static final String CHANGE_USER_PASS_EMAIL = "UPDATE `user` SET password = ? WHERE email = ?";
     static final String CHANGE_CURRENT_USER_PASS = "UPDATE `user` SET password = ? WHERE id = ?";
     static final String ADD_USER_TO_FAV = "INSERT INTO `user_user_fav` (user_id, user_added_fav) VALUES (?, ?)";
@@ -190,8 +190,9 @@ public class AUserADO {
                 pstmt = conn.prepareStatement(MOD_USER);
                 pstmt.setString(1, aUser.getNick());
                 pstmt.setString(2, aUser.getPassword());
-                pstmt.setInt(3, aUser.getIdObjective());
-                pstmt.setInt(4, aUser.getId());
+                pstmt.setString(3, aUser.getUbication());
+                pstmt.setInt(4, aUser.getIdObjective());
+                pstmt.setInt(5, aUser.getId());
                 aRes = pstmt.executeUpdate();
             }catch(SQLException ex)
             {

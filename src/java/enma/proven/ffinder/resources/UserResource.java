@@ -87,17 +87,18 @@ public class UserResource {
      * @param aUserID
      * @param aNewNick
      * @param aNewPass
+     * @param aNewUbication
      * @param aIdObjective
      * @param currentNick
      * @return 
      */
     @Path("mod")
     @POST
-    public Response modUserFromDatabase(@FormParam("userID") int aUserID, @FormParam("nick") String aNewNick, @FormParam("pass") String aNewPass, @FormParam("idObjective") int aIdObjective, @FormParam("currentNick") String currentNick)
+    public Response modUserFromDatabase(@FormParam("userID") int aUserID, @FormParam("nick") String aNewNick, @FormParam("pass") String aNewPass, @FormParam("ubication") String aNewUbication,@FormParam("idObjective") int aIdObjective, @FormParam("currentNick") String currentNick)
     {
         int result = 0;
         aUserService = new UserService();
-        AUser aU = new AUser(aUserID, aNewNick, aNewPass, aIdObjective);
+        AUser aU = new AUser(aUserID, aNewNick, aNewPass, aNewUbication, aIdObjective);
         result = aUserService.modifyUser(aU, currentNick);
         return Response.ok(result).build();
     }

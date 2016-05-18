@@ -39,10 +39,11 @@ public class AUser {
     }
     
     //mod user constructor
-    public AUser(int id, String nick, String password, int idObjective) {
+    public AUser(int id, String nick, String password, String ubication, int idObjective) {
         this.id = id;
         this.nick = nick;
         this.password = password;
+        this.ubication = ubication;
         this.idObjective = idObjective;
     }
     
