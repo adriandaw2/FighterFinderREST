@@ -35,7 +35,8 @@ public class ACharacterADO {
     
     //SQL SENTENCES
     static final String GET_GAME_CHARACTERS = "SELECT * FROM `character` WHERE id_game = ?";
-    static final String GET_GAME_CHARACTER_USER = "SELECT c.id, c.name FROM `character` c LEFT OUTER JOIN `user_character` uc ON c.id NOT IN (SELECT ucs.character_id FROM `user_character` ucs WHERE ucs.user_id = ?) WHERE c.id_game = ?";
+    static final String GET_GAME_NO_CHARACTER_USER = "SELECT c.id, c.name FROM `character` c JOIN `user_character` uc ON c.id NOT IN (SELECT ucs.character_id FROM `user_character` ucs WHERE ucs.user_id = ?) WHERE c.id_game = ?";
+    static final String GET_GAME_CHARACTER_USER = "SELECT c.id, c.name FROM `character` c JOIN `user_character` uc ON c.id IN (SELECT ucs.character_id FROM `user_character` ucs WHERE ucs.user_id = ?) WHERE c.id_game = ?";
     //static final String GET_USER_CHARACTERS= "SELECT * FROM `user_`"
     static final String ADD_CHARACTER_TO_USER = "INSERT INTO `user_character` (user_id, character_id) VALUES (?, ?)";
     static final String DELETE_CHARACTER_USER = "DELETE FROM `user_character` WHERE user_id = ? AND character_id = ?";
@@ -60,13 +61,13 @@ public class ACharacterADO {
     
     
     /**
-     * getAllCharacterFromGame
+     * getAllCharacterUserUseFromGame
      * Function that returns all the characters from one game
      * @param aGameID
      * @param aUserID
      * @return List<ACharacter>
      */
-    public List<ACharacter> getAllCharacterFromGame(int aGameID, int aUserID)
+    public List<ACharacter> getAllCharacterUserUseFromGame(int aGameID, int aUserID)
     {
         List<ACharacter> aCharList = new ArrayList();
         Connection conn = null;
@@ -76,6 +77,38 @@ public class ACharacterADO {
         try{
             conn = dataSource.getConnection();
             pstmt = conn.prepareStatement(GET_GAME_CHARACTER_USER);
+            pstmt.setInt(1, aUserID);
+            pstmt.setInt(2, aGameID);
+            rs = pstmt.executeQuery();
+            while(rs.next())
+            {
+                aCh = new ACharacter(rs.getInt(1), rs.getString(2), rs.getInt(3));
+                aCharList.add(aCh);
+            }
+        }catch(SQLException ex)
+        {
+            ex.printStackTrace(System.out);
+        }
+        return aCharList;
+    }
+    
+    /**
+     * getAllCharacterUserNoUseFromGame
+     * Function that returns all the characters from one game
+     * @param aGameID
+     * @param aUserID
+     * @return List<ACharacter>
+     */
+    public List<ACharacter> getAllCharacterUserNoUseFromGame(int aGameID, int aUserID)
+    {
+        List<ACharacter> aCharList = new ArrayList();
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        ACharacter aCh = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(GET_GAME_NO_CHARACTER_USER);
             pstmt.setInt(1, aUserID);
             pstmt.setInt(2, aGameID);
             rs = pstmt.executeQuery();

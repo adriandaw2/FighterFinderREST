@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import enma.proven.ffinder.entities.ACharacter;
 import enma.proven.ffinder.services.CharacterService;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import javax.servlet.ServletContext;
 import javax.ws.rs.FormParam;
@@ -38,22 +39,48 @@ public class CharacterResource {
     
     
     /**
-     * getCharacterFromDatabase
+     * getCharacterFromDatabaseUserUse
      * Function to return all the character from one game
      * @param aGameID
      * @param aUserID
      * @return Response
      */
+    @Path("getCharacterUserUse")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCharacterFromDatabase(@FormParam("gameID") int aGameID, @FormParam("userID") int aUserID)
+    public Response getCharacterFromDatabaseUserUse(@FormParam("gameID") int aGameID, @FormParam("userID") int aUserID)
     {
         aCharService = new CharacterService();
         //Collection<ACharacter> aCharCollection = aCharService.getAllCharacterFromGame(aGameID, aUserID);
         //GenericEntity<Collection<ACharacter>> result = new GenericEntity<Collection<ACharacter>>(aCharCollection){};
         Gson gson = new Gson();
-        List<ACharacter> aList = aCharService.getAllCharacterFromGame(aGameID, aUserID);
-        String jsonResult = gson.toJson(aList);
+        List<ACharacter> aList = aCharService.getAllCharacterUserUseFromGame(aGameID, aUserID);
+        HashMap<String, List<ACharacter>> aMap = new HashMap();
+        aMap.put("characterUse", aList);
+        String jsonResult = gson.toJson(aMap);
+        return Response.ok().entity(jsonResult).build();       
+    }
+    
+    /**
+     * getCharacterFromDatabaseUserNoUse
+     * Function to return all the character from one game
+     * @param aGameID
+     * @param aUserID
+     * @return Response
+     */
+    @Path("getCharacterUserNoUse")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCharacterFromDatabaseUserNoUse(@FormParam("gameID") int aGameID, @FormParam("userID") int aUserID)
+    {
+        aCharService = new CharacterService();
+        //Collection<ACharacter> aCharCollection = aCharService.getAllCharacterFromGame(aGameID, aUserID);
+        //GenericEntity<Collection<ACharacter>> result = new GenericEntity<Collection<ACharacter>>(aCharCollection){};
+        Gson gson = new Gson();
+        List<ACharacter> aList = aCharService.getAllCharacterUserNoUseFromGame(aGameID, aUserID);
+        HashMap<String, List<ACharacter>> aMap = new HashMap();
+        aMap.put("characterDontUse", aList);
+        String jsonResult = gson.toJson(aMap);
         return Response.ok().entity(jsonResult).build();       
     }
     

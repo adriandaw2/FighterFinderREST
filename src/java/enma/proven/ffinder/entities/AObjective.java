@@ -64,7 +64,14 @@ public class AObjective {
 
     @Override
     public String toString() {
-        return "AObjective{" + "id=" + id + ", message=" + message + '}';
+        StringBuilder sb = new StringBuilder();
+        sb.append("Objective{");
+        sb.append("[ID: ");
+        sb.append(id);
+        sb.append("],[Message: ");
+        sb.append(message);
+        sb.append("]}");
+        return sb.toString();
     }
     
     

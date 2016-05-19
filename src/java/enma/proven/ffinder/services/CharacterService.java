@@ -21,15 +21,28 @@ public class CharacterService {
     }
     
     /**
-     * getAllCharacterFromGame
+     * getAllCharacterUserUseFromGame
      * Function to get all the character from one game
      * @param aGameID
      * @param aUserID
      * @return List<ACharacter>
      */
-    public List<ACharacter> getAllCharacterFromGame(int aGameID, int aUserID)
+    public List<ACharacter> getAllCharacterUserUseFromGame(int aGameID, int aUserID)
     {
-        List<ACharacter> aCharList = this.myADO.getAllCharacterFromGame(aGameID, aUserID);
+        List<ACharacter> aCharList = this.myADO.getAllCharacterUserUseFromGame(aGameID, aUserID);
+        return aCharList;
+    }
+    
+    /**
+     * getAllCharacterUserNoUseFromGame
+     * Function to get all the character from one game
+     * @param aGameID
+     * @param aUserID
+     * @return List<ACharacter>
+     */
+    public List<ACharacter> getAllCharacterUserNoUseFromGame(int aGameID, int aUserID)
+    {
+        List<ACharacter> aCharList = this.myADO.getAllCharacterUserNoUseFromGame(aGameID, aUserID);
         return aCharList;
     }
     

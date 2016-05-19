@@ -34,6 +34,7 @@ public class AGameADO {
     
     //SQL SENTENCES
     static final String GET_ALL_GAMES= "SELECT * FROM game;";
+    static final String GET_GAMES_USER_PLAY = "SELECT DISTINCT g.id, g.name FROM `game` g JOIN `user_game` ug ON g.id IN (SELECT ugs.game_id FROM `user_game` ugs WHERE ugs.user_id = ?)";
     static final String GET_GAMES_USER_DONT_PLAY = "SELECT DISTINCT g.id, g.name FROM `game` g JOIN `user_game` ug ON g.id NOT IN (SELECT ugs.game_id FROM `user_game` ugs WHERE ugs.user_id = ?)";
     static final String ADD_GAME_TO_USER = "INSERT INTO `user_game` (user_id, game_id) VALUES (?, ?)";
     static final String DELETE_GAME_USER = "DELETE FROM `user_game` WHERE user_id = ? AND game_id = ?";
@@ -112,6 +113,45 @@ public class AGameADO {
         try{
             conn = dataSource.getConnection();
             pstmt = conn.prepareStatement(GET_GAMES_USER_DONT_PLAY);
+            pstmt.setInt(1, uID);
+            rs = pstmt.executeQuery();
+            while(rs.next())
+            {
+                aG = new AGame(rs.getInt(1), rs.getString(2));
+                aGameList.add(aG);
+            }
+        }catch(SQLException ex)
+        {
+            ex.printStackTrace(System.out);
+        }
+        finally{
+                try {
+                    pstmt.close();
+                    rs.close();
+                    conn.close();
+                } catch (SQLException ex) {
+                    System.out.println("Could not close all the DB stuff");
+                } 
+            }
+        return aGameList;
+    }
+    
+    /**
+     * getGamesUserPlayFromDatabase
+     * Function that returns all the games from the database the user play
+     * @param uID
+     * @return List<AGame>
+     */
+    public List<AGame> getGamesUserPlayFromDatabase(int uID)
+    {
+        ArrayList<AGame> aGameList = new ArrayList();
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        AGame aG = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(GET_GAMES_USER_PLAY);
             pstmt.setInt(1, uID);
             rs = pstmt.executeQuery();
             while(rs.next())

@@ -45,6 +45,19 @@ public class GameService {
     }
     
     /**
+     * getGamesUserPlayFromDatabase
+     * Function to call the ADO and return a list of all the games the user play
+     * @param uID
+     * @return List<AGame>
+     */
+    public List<AGame> getGamesUserPlayFromDatabase(int uID)
+    {
+        List<AGame> aGameList = myADO.getGamesUserPlayFromDatabase(uID);
+        
+        return aGameList;
+    }
+    
+    /**
      * addGameToUser
      * Function to add a game to a user.
      * @param uID

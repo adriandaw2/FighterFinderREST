@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import enma.proven.ffinder.entities.AGame;
 import enma.proven.ffinder.services.GameService;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import javax.servlet.ServletContext;
 import javax.ws.rs.FormParam;
@@ -50,13 +51,15 @@ public class GameResource {
         //GenericEntity<Collection<AGame>> result = new GenericEntity<Collection<AGame>>(allGamesList){};
         Gson gson = new Gson();
         List<AGame> aList = aGameService.getAllGamesFromDatabase();
-        String jsonResult = gson.toJson(aList);
+        HashMap<String, List<AGame>> aMap = new HashMap();
+        aMap.put("allGames", aList);
+        String jsonResult = gson.toJson(aMap);
         return Response.ok().entity(jsonResult).build();
     }
     
     /**
      * getGamesUserDontPlayFromDatabase
-     * Function to get all the games in the database
+     * Function to get all the games the user don't in the database
      * @param uID
      * @return Response
      */
@@ -70,7 +73,31 @@ public class GameResource {
         //GenericEntity<Collection<AGame>> result = new GenericEntity<Collection<AGame>>(allGamesList){};
         Gson gson = new Gson();
         List<AGame> aList = aGameService.getGamesUserDontPlayFromDatabase(uID);
-        String jsonResult = gson.toJson(aList);
+        HashMap<String, List<AGame>> aMap = new HashMap();
+        aMap.put("gamesUserDontPLay", aList);
+        String jsonResult = gson.toJson(aMap);
+        return Response.ok().entity(jsonResult).build();
+    }
+    
+    /**
+     * getGamesUserPlayFromDatabase
+     * Function to get all the games the user play in the database
+     * @param uID
+     * @return Response
+     */
+    @POST
+    @Path("getGameNoPlayUser")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getGamesUserPlayFromDatabase(@FormParam("userID") int uID)
+    {
+        aGameService = new GameService();
+        //Collection<AGame> allGamesList = aGameService.getGamesUserDontPlayFromDatabase(uID);
+        //GenericEntity<Collection<AGame>> result = new GenericEntity<Collection<AGame>>(allGamesList){};
+        Gson gson = new Gson();
+        List<AGame> aList = aGameService.getGamesUserPlayFromDatabase(uID);
+        HashMap<String, List<AGame>> aMap = new HashMap();
+        aMap.put("gamesUserPlay", aList);
+        String jsonResult = gson.toJson(aMap);
         return Response.ok().entity(jsonResult).build();
     }
     
