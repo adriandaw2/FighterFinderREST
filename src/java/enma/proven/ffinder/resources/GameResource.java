@@ -64,7 +64,7 @@ public class GameResource {
      * @return Response
      */
     @POST
-    @Path("getGameNoPlayUser")
+    @Path("getGamesUserDontPlay")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getGamesUserDontPlayFromDatabase(@FormParam("userID") int uID)
     {
@@ -86,7 +86,7 @@ public class GameResource {
      * @return Response
      */
     @POST
-    @Path("getGameNoPlayUser")
+    @Path("getGamesUserPlay")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getGamesUserPlayFromDatabase(@FormParam("userID") int uID)
     {
