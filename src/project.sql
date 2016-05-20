@@ -153,6 +153,22 @@ ALTER TABLE `user_user_fav`
         ADD FOREIGN KEY (user_id) REFERENCES `user` (id),
         ADD FOREIGN KEY (user_added_fav) REFERENCES `user` (id);
 
+/*TRIGGER*/	
+DELIMITER $$
+CREATE TRIGGER after_insert_skill_rate AFTER INSERT 
+	ON `user_skill_rates` FOR EACH ROW
+
+BEGIN
+	
+	DECLARE mResult INT(1);
+	SELECT AVG(skill_rate) INTO mResult FROM `user_skill_rates` WHERE `user_rated` = NEW.user_rated;
+
+	UPDATE `user` SET `skill` = mResult WHERE `id` = NEW.user_rated;
+
+END; $$
+
+DELIMITER ;
+
 INSERT INTO `profile` (profiletype) VALUES
 	('admin'), ('user');
 
@@ -181,19 +197,5 @@ INSERT INTO `user_character` (user_id, character_id) VALUES
 INSERT INTO `user_user_fav` (user_id, user_added_fav) VALUES
         (2, 3), (2, 4), (3, 2), (4, 5);
 	
-/*TRIGGER*/	
-DELIMITER $$
-CREATE TRIGGER after_insert_skill_rate AFTER INSERT 
-	ON `user_skill_rates` FOR EACH ROW
 
-BEGIN
-	
-	DECLARE mResult INT(1);
-	SELECT AVG(skill_rate) INTO mResult FROM `user_skill_rates` WHERE `user_rated` = NEW.user_rated;
-
-	UPDATE `user` SET `skill` = mResult WHERE `id` = NEW.user_rated;
-
-END; $$
-
-DELIMITER ;
 

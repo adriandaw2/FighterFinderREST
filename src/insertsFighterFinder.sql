@@ -2,7 +2,7 @@ INSERT INTO `profile` (profiletype) VALUES
 	("admin"), ("user");
 
 INSERT INTO `game` (name) VALUES
-	("Street Fighter V"), ("BlazBlue Centralfiction"), ("Guilty Gear Xrd - Revelator"), ("Super Smash Bros. for Wii u"), ("Super Smash Bros. Melee"),("Killer Instinct"), ("Mortal Kombat X"), ("Skullgirls"), ("Under Night In-Birth: Exe Late"), ("Arcana Heart 3: Love Max"), ("Dengeki Bunko Fighting Climax: Ignition"), ("Melty Blood: Actress Again Current Code");
+	("Street Fighter V"), ("BlazBlue Centralfiction"), ("Guilty Gear Xrd - Revelator"), ("Super Smash Bros. for Wii u"), ("Super Smash Bros. Melee"),("Killer Instinct"), ("Mortal Kombat X"), ("Skullgirls"), ("Under Night In-Birth: Exe Late"), ("Arcana Heart 3: Love Max"), ("Dengeki Bunko Fighting Climax: Ignition"), ("Melty Blood: Actress Again Current Code"), ("Street Fighter III: 3rd Strike"), ("Super Street Fighter 2 Turbo"), ("Ultimate Marvel vs Capcom 3"), ("Tekken Tag Tournament 2");
 
 INSERT INTO `objective` (message) VALUES
 	("Searching for friends"), ("Having fun"), ("Compete"), ("I want to be the very best");
@@ -52,7 +52,23 @@ INSERT INTO `character` (name, id_game) VALUES
         ("Akiha", 12), ("Akiha(Seifuku)", 12), ("Akiha Vermillion", 12), ("Aoko", 12), ("Archetype: Earth", 12), ("Arcueid", 12), ("Ciel", 12), ("Hisui", 12), ("Hisui And Kohaku", 12),
         ("Kohaku", 12), ("Kohaku And Mech-Hisui", 12), ("Kouma", 12), ("Len", 12), ("Mech-Hisui", 12), ("Mech-Hisui And Neco Arc", 12), ("Miyako", 12), ("Neco Arc", 12), 
         ("Neco Arc Chaos", 12), ("Nero", 12), ("Power Ciel", 12), ("Red Arcueid", 12), ("Riesbyfe", 12), ("Roa", 12), ("Satsuki", 12), ("Shiki Nanaya", 12), ("Shiki Ryougi", 12),
-        ("Shiki Tohno", 12), ("Sion", 12), ("Sion TATARI", 12), ("Warakia", 12), ("White Len", 12);
+        ("Shiki Tohno", 12), ("Sion", 12), ("Sion TATARI", 12), ("Warakia", 12), ("White Len", 12),
+        ("Chun-Li", 13), ("Yun", 13), ("Ken", 13), ("Makoto", 13), ("Dudley", 13), ("Urien", 13), ("Akuma", 13), ("Yang", 13), ("Ryu", 13), ("Oro", 13), ("Elena", 13),
+        ("Ibuki", 13), ("Necro", 13), ("Alex", 13), ("Hugo", 13), ("Q", 13), ("Remy", 13), ("Twelve", 13), ("Sean", 13),
+        ("Ryu", 14), ("Ken", 14), ("E. Honda", 14), ("Chun-Li", 14), ("Blanka", 14), ("Zangief", 14), ("Guile", 14), ("Dhalsim", 14), ("T. Hawk", 14), ("Cammy", 14), ("Fei Long", 14),
+        ("Dee Jay", 14), ("Boxer / Balrog", 14), ("Claw / Vega", 14), ("Sagat", 14), ("Dictator / M. Bison", 14),
+        ("O. Ryu", 14), ("O. Ken", 14), ("O. E. Honda", 14), ("O. Chun-Li", 14), ("O. Blanka", 14), ("O. Zangief", 14), ("O. Guile", 14), ("Dhalsim", 14), ("T. Hawk", 14), ("Cammy", 14), ("Fei Long", 14),
+        ("O. Dee Jay", 14), ("O. Boxer / Balrog", 14), ("O. Claw / Vega", 14), ("O. Sagat", 14), ("O. Dictator / O. M. Bison", 14),
+        ("Akuma", 15), ("Amateratsu", 15), ("Arthur", 15), ("Chris Redfield", 15), ("Chun-Li", 15), ("C. Viper", 15), ("Dante", 15), ("Felicia", 15), ("Firebrand", 15), ("Frank West", 15), ("Haggar", 15),
+        ("Hsien-Ko", 15), ("Jill", 15), ("Morrigan", 15), ("Nemesis", 15), ("Phoenix Wright", 15), ("Ryu", 15), ("Spencer", 15), ("Strider", 15), ("Trish", 15), ("Tron Bonne", 15), ("Vergil", 15),
+        ("Viewtiful Joe", 15), ("Wesker", 15), ("Zero", 15),  ("Captain America", 15), ("Deadpool", 15), ("Dormammu", 15), ("Dr. Doom", 15), ("Dr. Strange", 15), ("Ghost Rider", 15), ("Hawkeye", 15),
+        ("Hulk", 15), ("Iron FIst", 15), ("Iron Man", 15), ("Magneto", 15), ("M.O.D.O.K.", 15), ("Nova", 15), ("Phoenix", 15), ("Rocket Racoon", 15), ("Sentinel", 15), ("She-Hulk", 15), ("Shuma-Gorath", 15),
+        ("Spider-Man", 15), ("Storm", 15), ("Super-Skrull", 15), ("Taskmaster", 15), ("Thor", 15), ("Wolverine", 15), ("X-23", 15),
+        ("Alex", 16), ("Alisa", 16), ("Ancient Ogre", 16), ("Angel", 16), ("Anna", 16), ("Armor King", 16), ("Asuka", 16), ("Baek", 16), ("Bob", 16), ("Bruce", 16), ("Bryan", 16), ("Christie", 16),
+        ("Devil Jin", 16), ("Dragunov", 16), ("Eddy", 16), ("Feng", 16), ("Forest Law", 16), ("Ganryu", 16), ("Heihachi", 16), ("Hwoarang", 16), ("Jack-6", 16), ("Jaycee", 16), ("Jin", 16),("Jinpachi", 16),
+        ("Jun", 16), ("Kazuya", 16), ("King", 16), ("Kuma", 16), ("Kunimitsu", 16), ("Lars", 16), ("Lee", 16), ("Lei", 16), ("Leo", 16), ("Lili", 16), ("Marduk", 16), ("Marshall Law", 16), ("Michelle", 16),
+        ("Miguel", 16), ("Miharu", 16), ("Nina", 16), ("Panda", 16), ("Paul", 16), ("Prototype Jack", 16), ("Raven", 16), ("Roger Jr.", 16), ("Sebastian", 16),
+        ("Slim Bob", 16), ("Steve", 16), ("Tiger Jackson", 16), ("True Ogre", 16), ("Wang", 16), ("Xiaoyu", 16), ("Yoshimitsu", 16), ("Zafina", 16);
 	
 
 
