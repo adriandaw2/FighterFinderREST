@@ -57,10 +57,11 @@ public class AUser {
     }
     
     //search user constructor
-    public AUser(int id, String nick, String email, int skill, boolean avaible, boolean showinmap, float glat, float glon, int idObjective) {
+    public AUser(int id, String nick, String email, String ubication, int skill, boolean avaible, boolean showinmap, float glat, float glon, int idObjective) {
         this.id = id;
         this.nick = nick;
         this.email = email;
+        this.ubication = ubication;
         this.skill = skill;
         this.avaible = avaible;
         this.showinmap = showinmap;

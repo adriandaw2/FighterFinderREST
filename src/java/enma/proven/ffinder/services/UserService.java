@@ -276,6 +276,19 @@ public class UserService {
     }
     
     /**
+     * searchUSkillSame
+     * Function to search a user by skill leve
+     * @param sLevel
+     * @return List<AUser>
+     */
+    public List<AUser> searchUSkillSame(int sLevel)
+    {
+        List<AUser> aList = this.myADO.getUSkillSame(sLevel);
+        
+        return aList;
+    }
+    
+    /**
      * generateRandomPassword
      * Function that return a random password
      * @return String

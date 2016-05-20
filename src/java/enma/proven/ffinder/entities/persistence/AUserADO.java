@@ -50,6 +50,9 @@ public class AUserADO {
     static final String ADD_USER_TO_FAV = "INSERT INTO `user_user_fav` (user_id, user_added_fav) VALUES (?, ?)";
     static final String DELETE_USER_FROM_FAV = "DELETE FROM `user_user_fav` WHERE user_id = ? AND user_added_fav = ?";
     static final String GET_USER_FAVS = "SELECT DISTINCT u.id, u.nick, u.skill, u.ubication, u.id_profile, u.avaible, u.showinmap, u.glat, u.glon, u.id_objective FROM `user` u INNER JOIN `user_user_fav` uf ON u.id IN (SELECT ufs.user_added_fav FROM `user_user_fav` ufs WHERE ufs.user_id = ?) ORDER BY u.nick";
+    static final String GET_USER_BY_SKILL = "SELECT * FROM `user` WHERE skill = ? ORDER BY nick";
+    static final String GET_USER_BY_SKILL_GREATER_SAME = "SELECT * FROM `user` WHERE skill >= ? ORDER BY nick";
+    static final String GET_USER_BY_SKILL_LOWER_SAME = "SELECT * FROM `user` WHERE skill <= ? ORDER BY nick";
     //EMAIL STUFF
     static final String CHECK_USER_AVAIBLE = "SELECT avaible FROM `user` WHERE email = ?";
     static final String ACTIVATE_ACC = "UPDATE `user` SET avaible = 1 WHERE email = ?";
@@ -101,7 +104,7 @@ public class AUserADO {
                 aU.setId(rs.getInt(1));
                 aU.setNick(rs.getString(2));
                 aU.setEmail(rs.getString(3));
-                aU.setPassword(rs.getString(4));
+                //aU.setPassword(rs.getString(4));
                 aU.setUbication(rs.getString(5));
                 aU.setSkill(rs.getInt(6));
                 aU.setAvaible(rs.getBoolean(7));
@@ -111,9 +114,14 @@ public class AUserADO {
                 aU.setIdProfile(rs.getInt(11));
                 aU.setIdObjective(rs.getInt(12));
             }
+            if(aU == null)
+            {
+                //write log
+            }
         }catch(SQLException ex)
         {
             ex.printStackTrace(System.out);
+            //write log
         }
         finally{
             try {
@@ -122,12 +130,9 @@ public class AUserADO {
                 conn.close();
             } catch (SQLException ex) {
                 System.out.println("Could not close all the DB stuff");
+                //write log
             } 
         }
-        /*aU = new AUser();
-        aU.setId(1);
-        aU.setNick(aNick);
-        aU.setIdProfile(1);*/
         return aU;
     }
     
@@ -155,6 +160,7 @@ public class AUserADO {
             }catch(SQLException ex)
             {
                 ex.printStackTrace(System.out);
+                //write log
             }
             finally{
                 try {
@@ -162,6 +168,7 @@ public class AUserADO {
                     conn.close();
                 } catch (SQLException ex) {
                     System.out.println("Could not close all the DB stuff");
+                    //write log
                 } 
             }
         }
@@ -200,6 +207,7 @@ public class AUserADO {
             }catch(SQLException ex)
             {
                 ex.printStackTrace(System.out);
+                //write log
             }
             finally{
                 try {
@@ -207,6 +215,7 @@ public class AUserADO {
                     conn.close();
                 } catch (SQLException ex) {
                     System.out.println("Could not close all the DB stuff");
+                    //write log
                 } 
             }
         }
@@ -255,6 +264,7 @@ public class AUserADO {
         }catch(SQLException ex)
         {
             ex.printStackTrace(System.out);
+            //write log
         }
         finally{
             try {
@@ -263,6 +273,7 @@ public class AUserADO {
                 conn.close();
             } catch (SQLException ex) {
                 System.out.println("Could not close all the DB stuff");
+                //write log
             } 
         }
         return aList;
@@ -309,6 +320,7 @@ public class AUserADO {
         }catch(SQLException ex)
         {
             ex.printStackTrace(System.out);
+            //write log
         }
         finally{
             try {
@@ -520,6 +532,138 @@ public class AUserADO {
             }
         }
         return result;
+    }
+    
+    /**
+     * getUSkillSame
+     * This function search all the user with a skill level
+     * @param sLevel
+     * @return List<AUser>
+     */
+    public List<AUser> getUSkillSame(int sLevel)
+    {
+        List<AUser> aList = new ArrayList();
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        AUser aU = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(GET_USER_BY_SKILL);
+            pstmt.setInt(1, sLevel);
+            rs = pstmt.executeQuery();
+            while(rs.next())
+            {
+                if(rs.getInt(11)!= 1)
+                {
+                    //AUser(int id, String nick, String email, String ubication, int skill, boolean avaible, boolean showinmap, float glat, float glon, int idObjective) {
+                    aU = new AUser(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(5), rs.getInt(6), rs.getBoolean(7),
+                            rs.getBoolean(8), rs.getFloat(9), rs.getFloat(10), rs.getInt(12));
+                    aList.add(aU);
+                }
+            }
+        }catch(SQLException ex)
+        {
+            
+        }finally{
+            try{
+                conn.close();
+                pstmt.close();
+                rs.close();
+            }catch(SQLException ex)
+            {
+
+            }
+        }
+        return aList;
+    }
+    
+    /**
+     * getUSkillSameGreater
+     * This function search all the user with the same or greater skill level
+     * @param sLevel
+     * @return List<AUser>
+     */
+    public List<AUser> getUSkillSameGreater(int sLevel)
+    {
+        List<AUser> aList = new ArrayList();
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        AUser aU = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(GET_USER_BY_SKILL_GREATER_SAME);
+            pstmt.setInt(1, sLevel);
+            rs = pstmt.executeQuery();
+            while(rs.next())
+            {
+                if(rs.getInt(11)!= 1)
+                {
+                    //AUser(int id, String nick, String email, String ubication, int skill, boolean avaible, boolean showinmap, float glat, float glon, int idObjective) {
+                    aU = new AUser(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(5), rs.getInt(6), rs.getBoolean(7),
+                            rs.getBoolean(8), rs.getFloat(9), rs.getFloat(10), rs.getInt(12));
+                    aList.add(aU);
+                }
+            }
+        }catch(SQLException ex)
+        {
+            
+        }finally{
+            try{
+                conn.close();
+                pstmt.close();
+                rs.close();
+            }catch(SQLException ex)
+            {
+
+            }
+        }
+        return aList;
+    }
+    
+    /**
+     * getUSkillSameLower
+     * This function search all the user with the same or lower skill level
+     * @param sLevel
+     * @return List<AUser>
+     */
+    public List<AUser> getUSkillSameLower(int sLevel)
+    {
+        List<AUser> aList = new ArrayList();
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        AUser aU = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(GET_USER_BY_SKILL_LOWER_SAME);
+            pstmt.setInt(1, sLevel);
+            rs = pstmt.executeQuery();
+            while(rs.next())
+            {
+                if(rs.getInt(11)!= 1)
+                {
+                    //AUser(int id, String nick, String email, String ubication, int skill, boolean avaible, boolean showinmap, float glat, float glon, int idObjective) {
+                    aU = new AUser(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(5), rs.getInt(6), rs.getBoolean(7),
+                            rs.getBoolean(8), rs.getFloat(9), rs.getFloat(10), rs.getInt(12));
+                    aList.add(aU);
+                }
+            }
+        }catch(SQLException ex)
+        {
+            
+        }finally{
+            try{
+                conn.close();
+                pstmt.close();
+                rs.close();
+            }catch(SQLException ex)
+            {
+
+            }
+        }
+        return aList;
     }
     
     //CHECKING METHODS
