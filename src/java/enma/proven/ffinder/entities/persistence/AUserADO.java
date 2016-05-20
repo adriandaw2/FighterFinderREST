@@ -8,12 +8,17 @@ package enma.proven.ffinder.entities.persistence;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import enma.proven.ffinder.entities.AUser;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 /**
  *
@@ -24,16 +29,16 @@ public class AUserADO {
     static final String SERVER_NAME = "localhost";
     static final int PORT = 3306;
     //local
-    /*static final String BD_URL = "jdbc:mysql://localhost:3306/fighterfinderdb";
+    static final String BD_URL = "jdbc:mysql://localhost:3306/fighterfinderdb";
     static final String USUARI = "standuser";
     static final String PASSWORD = "normal4321@";
-    static final String DB_NAME = "fighterfinderdb";*/
+    static final String DB_NAME = "fighterfinderdb";
     
     //school server
-    static final String BD_URL = "jdbc:mysql://localhost/dam16g4";
+    /*static final String BD_URL = "jdbc:mysql://localhost/dam16g4";
     static final String DB_NAME = "dam16g4";
     static final String USUARI = "dam16-g4";
-    static final String PASSWORD = "Oz5eim";
+    static final String PASSWORD = "Oz5eim";*/
     private MysqlDataSource dataSource;
     
     //SQL SENTENCES
@@ -58,7 +63,9 @@ public class AUserADO {
     static final String ACTIVATE_ACC = "UPDATE `user` SET avaible = 1 WHERE email = ?";
     static final String DEACTIVATE_ACC = "UPDATE `user` SET avaible = 0 WHERE email = ?";
     static final String GET_USER_BY_EMAIL = "SELECT id, nick, email FROM `user` WHERE email = ?";
+    private Logger myLogger;
     public AUserADO() {
+        createLogger();
         prepareAndSetConection();
     }
     
@@ -117,11 +124,14 @@ public class AUserADO {
             if(aU == null)
             {
                 //write log
+                myLogger.log(Level.INFO, "User with nick: {0} failed to enter", aNick);
+                //System.out.println("User don't exist");
             }
         }catch(SQLException ex)
         {
             ex.printStackTrace(System.out);
             //write log
+            myLogger.log(Level.SEVERE, "Exception trying to log in: {0}", ex.getMessage());
         }
         finally{
             try {
@@ -131,6 +141,7 @@ public class AUserADO {
             } catch (SQLException ex) {
                 System.out.println("Could not close all the DB stuff");
                 //write log
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
             } 
         }
         return aU;
@@ -161,14 +172,16 @@ public class AUserADO {
             {
                 ex.printStackTrace(System.out);
                 //write log
+                myLogger.log(Level.SEVERE, "Exception trying to add user to database: {0}", ex.getMessage());
             }
             finally{
                 try {
                     pstmt.close();
                     conn.close();
                 } catch (SQLException ex) {
-                    System.out.println("Could not close all the DB stuff");
+                    //System.out.println("Could not close all the DB stuff");
                     //write log
+                    myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
                 } 
             }
         }
@@ -208,14 +221,16 @@ public class AUserADO {
             {
                 ex.printStackTrace(System.out);
                 //write log
+                myLogger.log(Level.INFO, "Exception trying to modify a user: {0}", ex.getMessage());
             }
             finally{
                 try {
                     pstmt.close();
                     conn.close();
                 } catch (SQLException ex) {
-                    System.out.println("Could not close all the DB stuff");
+                    //System.out.println("Could not close all the DB stuff");
                     //write log
+                    myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
                 } 
             }
         }
@@ -265,6 +280,7 @@ public class AUserADO {
         {
             ex.printStackTrace(System.out);
             //write log
+            myLogger.log(Level.INFO, "Exception trying to search users by nick: {0}", ex.getMessage());
         }
         finally{
             try {
@@ -272,8 +288,9 @@ public class AUserADO {
                 rs.close();
                 conn.close();
             } catch (SQLException ex) {
-                System.out.println("Could not close all the DB stuff");
+                //System.out.println("Could not close all the DB stuff");
                 //write log
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
             } 
         }
         return aList;
@@ -319,8 +336,9 @@ public class AUserADO {
             }
         }catch(SQLException ex)
         {
-            ex.printStackTrace(System.out);
+            //ex.printStackTrace(System.out);
             //write log
+            myLogger.log(Level.INFO, "Exception trying to search users by game: {0}", ex.getMessage());
         }
         finally{
             try {
@@ -328,7 +346,8 @@ public class AUserADO {
                 rs.close();
                 conn.close();
             } catch (SQLException ex) {
-                System.out.println("Could not close all the DB stuff");
+                //System.out.println("Could not close all the DB stuff");
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
             } 
         }
         return aList;
@@ -358,15 +377,17 @@ public class AUserADO {
             }
         }catch(SQLException ex)
         {
-            ex.printStackTrace(System.out);
+            //ex.printStackTrace(System.out);
+            myLogger.log(Level.INFO, "Exception trying to activate user account: {0}", ex.getMessage());
             result = -1;
         }finally{
             try {
                 pstmt.close();
                 conn.close();
             } catch (SQLException ex) {
-                System.out.println("Could not close all the DB stuff");
+                //System.out.println("Could not close all the DB stuff");
                 result = -1;
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
             } 
         }
         return result;
@@ -394,15 +415,17 @@ public class AUserADO {
             }
         }catch(SQLException ex)
         {
-            ex.printStackTrace(System.out);
+            //ex.printStackTrace(System.out);
             result = -1;
+            myLogger.log(Level.INFO, "Exception trying to deactivate user acount: {0}", ex.getMessage());
         }finally{
             try {
                 pstmt.close();
                 conn.close();
             } catch (SQLException ex) {
-                System.out.println("Could not close all the DB stuff");
+                //System.out.println("Could not close all the DB stuff");
                 result = -1;
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
             } 
         }
         return result;
@@ -451,7 +474,8 @@ public class AUserADO {
             }
         }catch(SQLException ex)
         {
-            ex.printStackTrace(System.out);
+            //ex.printStackTrace(System.out);
+            myLogger.log(Level.INFO, "Exception trying to get all user favs: {0}", ex.getMessage());
         }
         finally{
             try {
@@ -459,7 +483,8 @@ public class AUserADO {
                 rs.close();
                 conn.close();
             } catch (SQLException ex) {
-                System.out.println("Could not close all the DB stuff");
+                //System.out.println("Could not close all the DB stuff");
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
             } 
         }
         return aList;
@@ -486,14 +511,16 @@ public class AUserADO {
         }catch(SQLException ex)
         {
             result = -1;
+            myLogger.log(Level.INFO, "Exception trying to add a new favorite user: {0}", ex.getMessage());
         }finally{
             try{
                 conn.close();
                 pstmt.close();
             }catch(SQLException ex)
             {
-                System.out.println("Could not close all the DB stuff");
+                //System.out.println("Could not close all the DB stuff");
                 result = -1;
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
             }
         }
         return result;
@@ -521,14 +548,16 @@ public class AUserADO {
         }catch(SQLException ex)
         {
             result = -1;
+            myLogger.log(Level.INFO, "Exception trying to delete a user favorite: {0}", ex.getMessage());
         }finally{
             try{
                 conn.close();
                 pstmt.close();
             }catch(SQLException ex)
             {
-                System.out.println("Could not close all the DB stuff");
+                //System.out.println("Could not close all the DB stuff");
                 result = -1;
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
             }
         }
         return result;
@@ -564,7 +593,7 @@ public class AUserADO {
             }
         }catch(SQLException ex)
         {
-            
+            myLogger.log(Level.INFO, "Exception trying to get user by same skill level: {0}", ex.getMessage());
         }finally{
             try{
                 conn.close();
@@ -572,7 +601,7 @@ public class AUserADO {
                 rs.close();
             }catch(SQLException ex)
             {
-
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
             }
         }
         return aList;
@@ -608,7 +637,7 @@ public class AUserADO {
             }
         }catch(SQLException ex)
         {
-            
+            myLogger.log(Level.INFO, "Exception trying to get user by same or greater skill level: {0}", ex.getMessage());
         }finally{
             try{
                 conn.close();
@@ -616,7 +645,7 @@ public class AUserADO {
                 rs.close();
             }catch(SQLException ex)
             {
-
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
             }
         }
         return aList;
@@ -652,7 +681,7 @@ public class AUserADO {
             }
         }catch(SQLException ex)
         {
-            
+            myLogger.log(Level.INFO, "Exception trying to get user by same or lower skill level: {0}", ex.getMessage());
         }finally{
             try{
                 conn.close();
@@ -660,7 +689,7 @@ public class AUserADO {
                 rs.close();
             }catch(SQLException ex)
             {
-
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
             }
         }
         return aList;
@@ -708,7 +737,8 @@ public class AUserADO {
             }
         }catch(SQLException ex)
         {
-            ex.printStackTrace(System.out);
+            //ex.printStackTrace(System.out);
+            myLogger.log(Level.INFO, "Exception trying to check if the user already exist to add it: {0}", ex.getMessage());
         }
         finally{
             try {
@@ -716,7 +746,8 @@ public class AUserADO {
                 rs.close();
                 conn.close();
             } catch (SQLException ex) {
-                System.out.println("Could not close all the DB stuff");
+                //System.out.println("Could not close all the DB stuff");
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
             } 
         }
         return res;
@@ -745,8 +776,9 @@ public class AUserADO {
             }
         }catch(SQLException ex)
         {
-            ex.printStackTrace(System.out);
+            //ex.printStackTrace(System.out);
             aRes = -1;
+            myLogger.log(Level.INFO, "Exception trying to check if the user with mail "+uMail+" is already active: {0}",  ex.getMessage());
         }
         finally{
             try {
@@ -754,7 +786,8 @@ public class AUserADO {
                 rs.close();
                 conn.close();
             } catch (SQLException ex) {
-                System.out.println("Could not close all the DB stuff");
+                //System.out.println("Could not close all the DB stuff");
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
             } 
         }
         return aRes;
@@ -783,8 +816,9 @@ public class AUserADO {
             }
         }catch(SQLException ex)
         {
-            ex.printStackTrace(System.out);
+            //ex.printStackTrace(System.out);
             aRes = -1;
+            myLogger.log(Level.INFO, "Exception trying to check if the user "+aEmail+"exist by email : {0}",  ex.getMessage());
         }
         finally{
             try {
@@ -792,7 +826,8 @@ public class AUserADO {
                 rs.close();
                 conn.close();
             } catch (SQLException ex) {
-                System.out.println("Could not close all the DB stuff");
+                //System.out.println("Could not close all the DB stuff");
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
             } 
         }
         return aRes;
@@ -823,7 +858,8 @@ public class AUserADO {
             }
         }catch(SQLException ex)
         {
-            ex.printStackTrace(System.out);
+            //ex.printStackTrace(System.out);
+            myLogger.log(Level.INFO, "Exception trying to get the user with mail "+aEmail+": {0}",  ex.getMessage());
         }
         finally{
             try {
@@ -831,7 +867,8 @@ public class AUserADO {
                 rs.close();
                 conn.close();
             } catch (SQLException ex) {
-                System.out.println("Could not close all the DB stuff");
+                //System.out.println("Could not close all the DB stuff");
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
             } 
         }
         return aU;
@@ -859,6 +896,7 @@ public class AUserADO {
         }catch(SQLException ex)
         {
             result = -1;
+            myLogger.log(Level.INFO, "Exception trying to change the user with email: "+uMail+": {0}",  ex.getMessage());
         }finally{
             try{
                 conn.close();
@@ -866,7 +904,8 @@ public class AUserADO {
             }catch(SQLException ex)
             {
                 result = -1;
-                System.out.println("Could not close all the DB stuff");
+                //System.out.println("Could not close all the DB stuff");
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
             }
         }
         return result;
@@ -893,6 +932,7 @@ public class AUserADO {
         }catch(SQLException ex)
         {
             result = -1;
+            myLogger.log(Level.INFO, "Exception trying to change the current pass of the user with ID: "+uID+": {0}",  ex.getMessage());
         }finally{
             try{
                 conn.close();
@@ -900,9 +940,33 @@ public class AUserADO {
             }catch(SQLException ex)
             {
                 result = -1;
-                System.out.println("Could not close all the DB stuff");
+                //System.out.println("Could not close all the DB stuff");
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
             }
         }
         return result;
+    }
+    
+    //LOGGER
+    /**
+     * createLogger
+     * Method to instanciate the logger
+     * @param none
+     * @return none
+     */
+    private void createLogger() {
+        try {
+            //FileHandler myFileHandler = new FileHandler("..\\..\\..\\UserADOLog.log", true);
+            
+            //FileHandler myFileHandler = new FileHandler("logs\\UserADOLog.log", true);
+            FileHandler myFileHandler = new FileHandler("D:\\NetBeansProjects\\FighterFinderREST\\src\\java\\enma\\proven\\ffinder\\entities\\persistence\\logs\\UserADOLog.log", true);
+            
+            myFileHandler.setFormatter(new SimpleFormatter());
+            myLogger = Logger.getLogger("enma.proven.ffinder.entities.persistence.logs.UserADOLog.log");
+            myLogger.addHandler(myFileHandler);
+            myLogger.setUseParentHandlers(false);
+        } catch (IOException | SecurityException ex) {
+            ex.printStackTrace(System.out);
+        }
     }
 }

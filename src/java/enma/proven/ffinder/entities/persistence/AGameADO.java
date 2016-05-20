@@ -7,12 +7,17 @@ package enma.proven.ffinder.entities.persistence;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import enma.proven.ffinder.entities.AGame;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 /**
  *
@@ -23,16 +28,16 @@ public class AGameADO {
     static final String SERVER_NAME = "localhost";
     static final int PORT = 3306;
     //local
-    /*static final String BD_URL = "jdbc:mysql://localhost:3306/fighterfinderdb";
+    static final String BD_URL = "jdbc:mysql://localhost:3306/fighterfinderdb";
     static final String USUARI = "standuser";
     static final String PASSWORD = "normal4321@";
-    static final String DB_NAME = "fighterfinderdb";*/
+    static final String DB_NAME = "fighterfinderdb";
     
     //school server
-    static final String BD_URL = "jdbc:mysql://localhost/dam16g4";
+    /*static final String BD_URL = "jdbc:mysql://localhost/dam16g4";
     static final String DB_NAME = "dam16g4";
     static final String USUARI = "dam16-g4";
-    static final String PASSWORD = "Oz5eim";
+    static final String PASSWORD = "Oz5eim";*/
     private MysqlDataSource dataSource;
     
     //SQL SENTENCES
@@ -41,8 +46,11 @@ public class AGameADO {
     static final String GET_GAMES_USER_DONT_PLAY = "SELECT DISTINCT g.id, g.name FROM `game` g JOIN `user_game` ug ON g.id NOT IN (SELECT ugs.game_id FROM `user_game` ugs WHERE ugs.user_id = ?) ORDER BY g.name";
     static final String ADD_GAME_TO_USER = "INSERT INTO `user_game` (user_id, game_id) VALUES (?, ?)";
     static final String DELETE_GAME_USER = "DELETE FROM `user_game` WHERE user_id = ? AND game_id = ?";
-
+    
+    private Logger myLogger;
+    
     public AGameADO() {
+        createLogger();
         prepareAndSetConection();
     }
     
@@ -86,7 +94,8 @@ public class AGameADO {
             }
         }catch(SQLException ex)
         {
-            ex.printStackTrace(System.out);
+            //ex.printStackTrace(System.out);
+            myLogger.log(Level.INFO, "Exception trying to get all the games from database: {0}", ex.getMessage());
         }
         finally{
                 try {
@@ -94,7 +103,8 @@ public class AGameADO {
                     rs.close();
                     conn.close();
                 } catch (SQLException ex) {
-                    System.out.println("Could not close all the DB stuff");
+                    //System.out.println("Could not close all the DB stuff");
+                    myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
                 } 
             }
         return aGameList;
@@ -125,7 +135,8 @@ public class AGameADO {
             }
         }catch(SQLException ex)
         {
-            ex.printStackTrace(System.out);
+            //ex.printStackTrace(System.out);
+            myLogger.log(Level.INFO, "Exception trying to get all the games a user don't play, user with ID->+"+uID+": {0}", ex.getMessage());
         }
         finally{
                 try {
@@ -133,7 +144,8 @@ public class AGameADO {
                     rs.close();
                     conn.close();
                 } catch (SQLException ex) {
-                    System.out.println("Could not close all the DB stuff");
+                    //System.out.println("Could not close all the DB stuff");
+                    myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
                 } 
             }
         return aGameList;
@@ -164,7 +176,8 @@ public class AGameADO {
             }
         }catch(SQLException ex)
         {
-            ex.printStackTrace(System.out);
+            //ex.printStackTrace(System.out);
+            myLogger.log(Level.INFO, "Exception trying to get all the games a user play, with ID->+"+uID+": {0}", ex.getMessage());
         }
         finally{
                 try {
@@ -172,7 +185,8 @@ public class AGameADO {
                     rs.close();
                     conn.close();
                 } catch (SQLException ex) {
-                    System.out.println("Could not close all the DB stuff");
+                    //System.out.println("Could not close all the DB stuff");
+                    myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
                 } 
             }
         return aGameList;
@@ -200,15 +214,17 @@ public class AGameADO {
             pstmt.setInt(2, gID);
             result = pstmt.executeUpdate();
         }catch(SQLException ex){
-            ex.printStackTrace(System.out);
+            //ex.printStackTrace(System.out);
             result = -1;
+            myLogger.log(Level.INFO, "Exception trying to add a game to a user: {0}", ex.getMessage());
         }
         finally{
                 try {
                     pstmt.close();
                     conn.close();
                 } catch (SQLException ex) {
-                    System.out.println("Could not close all the DB stuff");
+                    //System.out.println("Could not close all the DB stuff");
+                    myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
                 } 
             }
         return result;
@@ -234,17 +250,38 @@ public class AGameADO {
             pstmt.setInt(2, gID);
             result = pstmt.executeUpdate();
         }catch(SQLException ex){
-            ex.printStackTrace(System.out);
+            //ex.printStackTrace(System.out);
             result = -1;
+            myLogger.log(Level.INFO, "Exception trying to delete a game from a user: {0}", ex.getMessage());
         }
         finally{
                 try {
                     pstmt.close();
                     conn.close();
                 } catch (SQLException ex) {
-                    System.out.println("Could not close all the DB stuff");
+                    //System.out.println("Could not close all the DB stuff");
+                    myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
                 }
             }
         return result;
+    }
+    
+    
+    /**
+     * createLogger
+     * Method to instanciate the logger
+     * @param none
+     * @return none
+     */
+    private void createLogger() {
+        try {
+            FileHandler myFileHandler = new FileHandler("GameADOLog.log", true);
+            myFileHandler.setFormatter(new SimpleFormatter());
+            myLogger = Logger.getLogger("enma.proven.ffinder.entities.persistence.GameADO.log");
+            myLogger.addHandler(myFileHandler);
+            myLogger.setUseParentHandlers(false);
+        } catch (IOException | SecurityException ex) {
+            ex.printStackTrace(System.out);
+        }
     }
 }

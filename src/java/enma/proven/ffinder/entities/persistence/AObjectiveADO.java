@@ -2,12 +2,17 @@ package enma.proven.ffinder.entities.persistence;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import enma.proven.ffinder.entities.AObjective;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 
 
@@ -20,21 +25,22 @@ public class AObjectiveADO {
     static final String SERVER_NAME = "localhost";
     static final int PORT = 3306;
     //local
-    /*static final String BD_URL = "jdbc:mysql://localhost:3306/fighterfinderdb";
+    static final String BD_URL = "jdbc:mysql://localhost:3306/fighterfinderdb";
     static final String USUARI = "standuser";
     static final String PASSWORD = "normal4321@";
-    static final String DB_NAME = "fighterfinderdb";*/
+    static final String DB_NAME = "fighterfinderdb";
     
     //school server
-    static final String BD_URL = "jdbc:mysql://localhost/dam16g4";
+    /*static final String BD_URL = "jdbc:mysql://localhost/dam16g4";
     static final String DB_NAME = "dam16g4";
     static final String USUARI = "dam16-g4";
-    static final String PASSWORD = "Oz5eim";
+    static final String PASSWORD = "Oz5eim";*/
     private MysqlDataSource dataSource;
-    
+    private Logger myLogger;
     //SQL SENTENCES
     static final String GET_ALL_OBJECTIVES = "SELECT * FROM `objective`";
     public AObjectiveADO(){
+        createLogger();
         prepareAndSetConection();
     }
     
@@ -88,9 +94,28 @@ public class AObjectiveADO {
                 rs.close();
             }catch(SQLException ex)
             {
-                System.out.println("Couldn't close al database stuff");
+                //System.out.println("Couldn't close al database stuff");
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
             }
         }
         return aList;
+    }
+    
+    /**
+     * createLogger
+     * Method to instanciate the logger
+     * @param none
+     * @return none
+     */
+    private void createLogger() {
+        try {
+            FileHandler myFileHandler = new FileHandler("ObjectiveADOLog.log", true);
+            myFileHandler.setFormatter(new SimpleFormatter());
+            myLogger = Logger.getLogger("enma.proven.ffinder.entities.persistence.ObjectiveADO.log");
+            myLogger.addHandler(myFileHandler);
+            myLogger.setUseParentHandlers(false);
+        } catch (IOException | SecurityException ex) {
+            ex.printStackTrace(System.out);
+        }
     }
 }
