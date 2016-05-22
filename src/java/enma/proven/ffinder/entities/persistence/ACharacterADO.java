@@ -53,7 +53,7 @@ public class ACharacterADO {
     
     private Logger myLogger;
     public ACharacterADO() {
-        createLogger();
+        //createLogger();
         prepareAndSetConection();
     }
     

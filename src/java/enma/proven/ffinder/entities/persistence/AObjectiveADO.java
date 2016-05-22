@@ -40,7 +40,7 @@ public class AObjectiveADO {
     //SQL SENTENCES
     static final String GET_ALL_OBJECTIVES = "SELECT * FROM `objective`";
     public AObjectiveADO(){
-        createLogger();
+        //createLogger();
         prepareAndSetConection();
     }
     

@@ -65,7 +65,7 @@ public class AUserADO {
     static final String GET_USER_BY_EMAIL = "SELECT id, nick, email FROM `user` WHERE email = ?";
     private Logger myLogger;
     public AUserADO() {
-        createLogger();
+        //createLogger();
         prepareAndSetConection();
     }
     
