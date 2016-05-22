@@ -25,16 +25,16 @@ public class AObjectiveADO {
     static final String SERVER_NAME = "localhost";
     static final int PORT = 3306;
     //local
-    static final String BD_URL = "jdbc:mysql://localhost:3306/fighterfinderdb";
+    /*static final String BD_URL = "jdbc:mysql://localhost:3306/fighterfinderdb";
     static final String USUARI = "standuser";
     static final String PASSWORD = "normal4321@";
-    static final String DB_NAME = "fighterfinderdb";
+    static final String DB_NAME = "fighterfinderdb";*/
     
     //school server
-    /*static final String BD_URL = "jdbc:mysql://localhost/dam16g4";
+    static final String BD_URL = "jdbc:mysql://localhost/dam16g4";
     static final String DB_NAME = "dam16g4";
     static final String USUARI = "dam16-g4";
-    static final String PASSWORD = "Oz5eim";*/
+    static final String PASSWORD = "Oz5eim";
     private MysqlDataSource dataSource;
     private Logger myLogger;
     //SQL SENTENCES
