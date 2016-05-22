@@ -44,8 +44,8 @@ public class ACharacterADO {
     
     //SQL SENTENCES
     static final String GET_GAME_CHARACTERS = "SELECT * FROM `character` WHERE id_game = ? ORDER BY name";
-    static final String GET_GAME_NO_CHARACTER_USER = "SELECT c.id, c.name, c.id_game FROM `character` c JOIN `user_character` uc ON c.id NOT IN (SELECT ucs.character_id FROM `user_character` ucs WHERE ucs.user_id = ?) WHERE c.id_game = ? ORDER BY c.name";
-    static final String GET_GAME_CHARACTER_USER = "SELECT c.id, c.name, c.id_game FROM `character` c JOIN `user_character` uc ON c.id IN (SELECT ucs.character_id FROM `user_character` ucs WHERE ucs.user_id = ?) WHERE c.id_game = ? ORDER BY c.name";
+    static final String GET_GAME_NO_CHARACTER_USER = "SELECT DISTINCT c.id, c.name, c.id_game FROM `character` c JOIN `user_character` uc ON c.id NOT IN (SELECT ucs.character_id FROM `user_character` ucs WHERE ucs.user_id = ?) WHERE c.id_game = ? ORDER BY c.name";
+    static final String GET_GAME_CHARACTER_USER = "SELECT DISTINCT c.id, c.name, c.id_game FROM `character` c JOIN `user_character` uc ON c.id IN (SELECT ucs.character_id FROM `user_character` ucs WHERE ucs.user_id = ?) WHERE c.id_game = ? ORDER BY c.name";
     //static final String GET_USER_CHARACTERS= "SELECT * FROM `user_`"
     static final String ADD_CHARACTER_TO_USER = "INSERT INTO `user_character` (user_id, character_id) VALUES (?, ?)";
     static final String DELETE_CHARACTER_USER = "DELETE FROM `user_character` WHERE user_id = ? AND character_id = ?";
