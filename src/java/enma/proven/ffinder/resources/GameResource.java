@@ -153,8 +153,10 @@ public class GameResource {
      * Modify a game in database
      * @param gName
      * @param gID
-     * return Response
+     * @return Response
      */
+    @POST
+    @Path("modGameInDatabase")
     public Response modifyGameInDatabase(@FormParam("gName") String gName, @FormParam("gID") int gID)
     {
         aGameService = new GameService();
