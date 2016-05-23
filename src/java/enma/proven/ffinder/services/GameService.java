@@ -85,4 +85,30 @@ public class GameService {
         
         return result;
     }
+    
+    /**
+     * addGameToDatabase
+     * Add a new game to the database
+     * @param gName
+     * @return int
+     */
+    public int addGameToDatabase(String gName)
+    {
+        int result = this.myADO.addNewGame(gName);
+        
+        return result;
+    }
+    
+    /**
+     * modGameFromDatabase
+     * Modify a game in the database
+     * @param gNameToMod
+     * @param gID
+     * @return int
+     */
+    public int modGameFromDatabase(String gNameToMod, int gID)
+    {
+        int result = this.myADO.modGame(gNameToMod, gID);
+        return result;
+    }
 }   

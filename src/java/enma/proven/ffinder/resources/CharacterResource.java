@@ -118,4 +118,37 @@ public class CharacterResource {
         return Response.ok(result).build();
     }
     
+    
+    /**
+     * addCharacterToGame
+     * Function to add a character to a game
+     * @param cName
+     * @param gID
+     * @return Response
+     */
+    @POST
+    @Path("addCharacterToGame")
+    public Response addCharacterToGame(@FormParam("cName") String cName, @FormParam("gID") int gID)
+    {
+        aCharService = new CharacterService();
+        int result = aCharService.addCharacterToGame(cName, gID);
+        return Response.ok(result).build();
+    }
+    
+    /**
+     * modCharacterFromGame
+     * Function to add a character to a game
+     * @param cName
+     * @param gID
+     * @return Response
+     */
+    @POST
+    @Path("modCharacterFromGame")
+    public Response modCharacterFromGame(@FormParam("cName") String cName, @FormParam("gID") int gID)
+    {
+        aCharService = new CharacterService();
+        int result = aCharService.modCharacterFromGame(cName, gID);
+        return Response.ok(result).build();
+    }
+    
 }

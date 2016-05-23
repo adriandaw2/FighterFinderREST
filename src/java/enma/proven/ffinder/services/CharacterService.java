@@ -76,6 +76,31 @@ public class CharacterService {
         return result;
     }
     
+    /**
+     * addCharacterToGame
+     * Function to add a character to a  game
+     * @param cName
+     * @param gID
+     * @return int
+     */
+    public int addCharacterToGame(String cName, int gID)
+    {
+        int result = this.myADO.addNewCharacterToGame(cName, gID);
+        return result;
+    }
+    
+    /**
+     * modCharacterFromGame
+     * Function to add a character to a  game
+     * @param cName
+     * @param gID
+     * @return int
+     */
+    public int modCharacterFromGame(String cName, int gID)
+    {
+        int result = this.myADO.modCharacter(cName, gID);
+        return result;
+    }
     
     
     

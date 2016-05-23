@@ -57,4 +57,34 @@ public class ObjectiveResource {
         return Response.ok().entity(jsonString).build();
     }
     
+    /**
+     * addNewObjective
+     * Function to add a new objective
+     * @param objMsg
+     * @return Response
+     */
+    @POST
+    @Path("addNewObj")
+    public Response addNewObjective(@FormParam("objmsg")String objMsg)
+    {
+        aObjService = new ObjectiveService();
+        int result = aObjService.addNewObjective(objMsg);
+        return Response.ok(result).build();
+    }
+    
+    /**
+     * modObjective
+     * Function to add a new objective
+     * @param objMsg
+     * @return Response
+     */
+    @POST
+    @Path("modObjective")
+    public Response modObjective(@FormParam("objmsg")String objMsg, @FormParam("oid")int oID)
+    {
+        aObjService = new ObjectiveService();
+        int result = aObjService.modObjective(objMsg, oID);
+        return Response.ok(result).build();
+    }
+    
 }

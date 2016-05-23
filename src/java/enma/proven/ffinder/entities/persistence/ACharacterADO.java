@@ -51,7 +51,8 @@ public class ACharacterADO {
     //static final String GET_USER_CHARACTERS= "SELECT * FROM `user_`"
     static final String ADD_CHARACTER_TO_USER = "INSERT INTO `user_character` (user_id, character_id) VALUES (?, ?)";
     static final String DELETE_CHARACTER_USER = "DELETE FROM `user_character` WHERE user_id = ? AND character_id = ?";
-    
+    static final String ADD_CHARACTER_TO_GAME = "INSERT INTO `character` (name, id_game) VALUES (?, ?)";
+    static final String UPDATE_CHARACTER_INFO = "UPDATE `character` SET name = ? WHERE id = ?";
     
     private Logger myLogger;
     public ACharacterADO() {
@@ -157,6 +158,76 @@ public class ACharacterADO {
                 } 
             }
         return aCharList;
+    }
+    
+    
+    /**
+     * addNewCharacterToGame
+     * Function to add a new character to a game
+     * @param cName
+     * @param gID
+     * @return int
+     */
+    public int addNewCharacterToGame(String cName, int gID)
+    {
+        int result = 0;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(ADD_CHARACTER_TO_GAME);
+            pstmt.setString(1, cName);
+            pstmt.setInt(2, gID);
+            result = pstmt.executeUpdate();
+        }catch(SQLException ex){
+            //ex.printStackTrace(System.out);
+            result = -1;
+            myLogger.log(Level.INFO, "Exception trying to add a character to a game with id->"+gID+" with name->+"+cName+": {0}", ex.getMessage());
+        }
+        finally{
+                try {
+                    pstmt.close();
+                    conn.close();
+                } catch (SQLException ex) {
+                    //System.out.println("Could not close all the DB stuff");
+                    myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
+                } 
+            }
+        return result;
+    }
+    
+    /**
+     * modCharacter
+     * Function to modify a character in the database
+     * @param nToMod
+     * @param cID
+     * @return int
+     */
+    public int modCharacter(String nToMod, int cID)
+    {
+        int result = 0;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(UPDATE_CHARACTER_INFO);
+            pstmt.setString(1, nToMod);
+            pstmt.setInt(2, cID);
+            result = pstmt.executeUpdate();
+        }catch(SQLException ex)
+        {
+            result = -1;
+            myLogger.log(Level.INFO, "Exception trying to modify a character with ID->"+cID+": {0}", ex.getMessage());
+        }finally{
+            try{
+                conn.close();
+                pstmt.close();
+            }catch(SQLException ex)
+            {
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
+            }
+        }
+        return result;
     }
     
     

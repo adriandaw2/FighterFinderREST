@@ -132,4 +132,33 @@ public class GameResource {
         int result = aGameService.deleteGameFromUser(uID, gID);
         return Response.ok(result).build();
     }
+    
+    /**
+     * addGameToDatabase
+     * Add a game to database
+     * @param gName
+     * @return Response
+     */
+    @POST
+    @Path("addGameToDatabase")
+    public Response addGameToDatabase(@FormParam("gName") String gName)
+    {
+        aGameService = new GameService();
+        int result = aGameService.addGameToDatabase(gName);
+        return Response.ok(result).build();
+    }
+    
+    /**
+     * modifyGameInDatabase
+     * Modify a game in database
+     * @param gName
+     * @param gID
+     * return Response
+     */
+    public Response modifyGameInDatabase(@FormParam("gName") String gName, @FormParam("gID") int gID)
+    {
+        aGameService = new GameService();
+        int result = aGameService.modGameFromDatabase(gName, gID);
+        return Response.ok(result).build();
+    }
 }

@@ -41,6 +41,8 @@ public class AObjectiveADO {
     private Logger myLogger;
     //SQL SENTENCES
     static final String GET_ALL_OBJECTIVES = "SELECT * FROM `objective`";
+    static final String ADD_NEW_OBJECTIVE = "INSERT INTO `objective` (message) VALUES (?)";
+    static final String UPDATE_OBJECTIVE = "UPDATE `objective` SET message = ? WHERE id = ?";
     public AObjectiveADO(){
         createLogger();
         prepareAndSetConection();
@@ -102,6 +104,76 @@ public class AObjectiveADO {
             }
         }
         return aList;
+    }
+    
+    /**
+     * addNewObjective
+     * Function to add a new objective
+     * @param objMsg
+     * @return int
+     */
+    public int addNewObjective(String objMsg)
+    {
+        int result = 0;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(ADD_NEW_OBJECTIVE);
+            pstmt.setString(1, objMsg);
+            result = pstmt.executeUpdate();
+        }catch(SQLException ex)
+        {
+            //ex.printStackTrace(System.out);
+            //System.out.println("Error handling the data" + ex.getMessage());
+            myLogger.log(Level.INFO, "Exception trying to add a new objective: {0}", ex.getMessage());
+        }finally{
+            try{
+                conn.close();
+                pstmt.close();
+            }catch(SQLException ex)
+            {
+                //System.out.println("Couldn't close al database stuff");
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
+            }
+        }
+        return result;
+    }
+    
+    /**
+     * modifyObjective
+     * Function to add a new objective
+     * @param objMsg
+     * @param oID
+     * @return int
+     */
+    public int modifyObjective(String objMsg, int oID)
+    {
+        int result = 0;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(UPDATE_OBJECTIVE);
+            pstmt.setString(1, objMsg);
+            pstmt.setInt(2, oID);
+            result = pstmt.executeUpdate();
+        }catch(SQLException ex)
+        {
+            //ex.printStackTrace(System.out);
+            //System.out.println("Error handling the data" + ex.getMessage());
+            myLogger.log(Level.INFO, "Exception trying to modify a objective: {0}", ex.getMessage());
+        }finally{
+            try{
+                conn.close();
+                pstmt.close();
+            }catch(SQLException ex)
+            {
+                //System.out.println("Couldn't close al database stuff");
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
+            }
+        }
+        return result;
     }
     
     /**

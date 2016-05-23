@@ -42,4 +42,28 @@ public class ObjectiveService {
         return aList;
     }
     
+    /**
+     * addNewObjective
+     * Function to add a new objective
+     * @param objMsg
+     * @return int
+     */
+    public int addNewObjective(String objMsg)
+    {
+        int result = this.myADO.addNewObjective(objMsg);
+        return result;
+    }
+    
+    /**
+     * modObjective
+     * Function to mod a objective
+     * @param objMsg
+     * @param oID
+     * @return int
+     */
+    public int modObjective(String objMsg, int oID)
+    {
+        int result = this.myADO.modifyObjective(objMsg, oID);
+        return result;
+    }
 }

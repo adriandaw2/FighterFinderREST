@@ -135,8 +135,8 @@ public class UserService {
     {
         String randPass = generateRandomPassword();
         //password in MD5
-        String randPassMD5 = "";
-        int result = this.myADO.changeUserPasswordByEmail(uMail, randPass);
+        String randPassMD5 = getMD5(randPass);
+        int result = this.myADO.changeUserPasswordByEmail(uMail, randPassMD5);
         AUser aUser = null;
         //change the method to use the two password
         //the randPass to send the pass via email and the MD5 to insert the pass in the DDBB

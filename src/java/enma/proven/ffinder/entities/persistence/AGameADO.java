@@ -48,6 +48,8 @@ public class AGameADO {
     static final String GET_GAMES_USER_DONT_PLAY = "SELECT DISTINCT g.id, g.name FROM `game` g JOIN `user_game` ug ON g.id NOT IN (SELECT ugs.game_id FROM `user_game` ugs WHERE ugs.user_id = ?) ORDER BY g.name";
     static final String ADD_GAME_TO_USER = "INSERT INTO `user_game` (user_id, game_id) VALUES (?, ?)";
     static final String DELETE_GAME_USER = "DELETE FROM `user_game` WHERE user_id = ? AND game_id = ?";
+    static final String ADD_NEW_GAME = "INSERT INTO game (name) VALUES (?)";
+    static final String UPDATE_GAME_INFO = "UPDATE `game` SET name = ? WHERE id = ?";
     
     private Logger myLogger;
     
@@ -265,6 +267,73 @@ public class AGameADO {
                     myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
                 }
             }
+        return result;
+    }
+    
+    /**
+     * addNewGame
+     * Function to add a new game
+     * @param gName
+     * @return int
+     */
+    public int addNewGame(String gName)
+    {
+        int result = 0;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(ADD_NEW_GAME);
+            pstmt.setString(1, gName);
+            result = pstmt.executeUpdate();
+        }catch(SQLException ex){
+            //ex.printStackTrace(System.out);
+            result = -1;
+            myLogger.log(Level.INFO, "Exception trying to add a new game with name->+"+gName+": {0}", ex.getMessage());
+        }
+        finally{
+                try {
+                    pstmt.close();
+                    conn.close();
+                } catch (SQLException ex) {
+                    //System.out.println("Could not close all the DB stuff");
+                    myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
+                } 
+            }
+        return result;
+    }
+    
+    /**
+     * modGame
+     * Function to modify a game in the database
+     * @param gToMod
+     * @param gID
+     * @return int
+     */
+    public int modGame(String gToMod, int gID)
+    {
+        int result = 0;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(UPDATE_GAME_INFO);
+            pstmt.setString(1, gToMod);
+            pstmt.setInt(2, gID);
+            result = pstmt.executeUpdate();
+        }catch(SQLException ex)
+        {
+            result = -1;
+            myLogger.log(Level.INFO, "Exception trying to modify a game with ID->"+gID+": {0}", ex.getMessage());
+        }finally{
+            try{
+                conn.close();
+                pstmt.close();
+            }catch(SQLException ex)
+            {
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
+            }
+        }
         return result;
     }
     
