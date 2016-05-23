@@ -91,14 +91,14 @@ public class CharacterService {
     
     /**
      * modCharacterFromGame
-     * Function to add a character to a  game
+     * Function to mod a character to a  game
      * @param cName
-     * @param gID
+     * @param cID
      * @return int
      */
-    public int modCharacterFromGame(String cName, int gID)
+    public int modCharacterFromGame(String cName, int cID)
     {
-        int result = this.myADO.modCharacter(cName, gID);
+        int result = this.myADO.modCharacter(cName, cID);
         return result;
     }
     

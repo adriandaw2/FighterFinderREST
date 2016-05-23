@@ -7,17 +7,13 @@ package enma.proven.ffinder.resources;
 
 import com.google.gson.Gson;
 import enma.proven.ffinder.entities.AObjective;
-import enma.proven.ffinder.entities.AUser;
 import enma.proven.ffinder.services.ObjectiveService;
-import enma.proven.ffinder.services.UserService;
 import java.util.HashMap;
 import java.util.List;
 import javax.servlet.ServletContext;
 import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -76,6 +72,7 @@ public class ObjectiveResource {
      * modObjective
      * Function to add a new objective
      * @param objMsg
+     * @param oID
      * @return Response
      */
     @POST
