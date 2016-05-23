@@ -7,7 +7,9 @@ package enma.proven.ffinder.entities.persistence;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import enma.proven.ffinder.entities.AGame;
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -275,7 +277,9 @@ public class AGameADO {
      */
     private void createLogger() {
         try {
-            FileHandler myFileHandler = new FileHandler("GameADOLog.log", true);
+            URL url = getClass().getResource("GameADOLog.log");
+            File logFile = new File(url.getPath());
+            FileHandler myFileHandler = new FileHandler(logFile.getAbsolutePath(), (2*1024*1024), 1, true);
             myFileHandler.setFormatter(new SimpleFormatter());
             myLogger = Logger.getLogger("enma.proven.ffinder.entities.persistence.GameADO.log");
             myLogger.addHandler(myFileHandler);

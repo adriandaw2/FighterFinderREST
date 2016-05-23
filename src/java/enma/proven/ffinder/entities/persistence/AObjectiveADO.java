@@ -2,7 +2,9 @@ package enma.proven.ffinder.entities.persistence;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import enma.proven.ffinder.entities.AObjective;
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,7 +42,7 @@ public class AObjectiveADO {
     //SQL SENTENCES
     static final String GET_ALL_OBJECTIVES = "SELECT * FROM `objective`";
     public AObjectiveADO(){
-        //createLogger();
+        createLogger();
         prepareAndSetConection();
     }
     
@@ -85,8 +87,9 @@ public class AObjectiveADO {
             }
         }catch(SQLException ex)
         {
-            ex.printStackTrace(System.out);
-            System.out.println("Error handling the data" + ex.getMessage());
+            //ex.printStackTrace(System.out);
+            //System.out.println("Error handling the data" + ex.getMessage());
+            myLogger.log(Level.INFO, "Exception trying to get all the objectives: {0}", ex.getMessage());
         }finally{
             try{
                 conn.close();
@@ -109,7 +112,9 @@ public class AObjectiveADO {
      */
     private void createLogger() {
         try {
-            FileHandler myFileHandler = new FileHandler("ObjectiveADOLog.log", true);
+            URL url = getClass().getResource("ObjectiveADOLog.log");
+            File logFile = new File(url.getPath());
+            FileHandler myFileHandler = new FileHandler(logFile.getAbsolutePath(), (2*1024*1024), 1, true);
             myFileHandler.setFormatter(new SimpleFormatter());
             myLogger = Logger.getLogger("enma.proven.ffinder.entities.persistence.ObjectiveADO.log");
             myLogger.addHandler(myFileHandler);

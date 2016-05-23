@@ -8,7 +8,9 @@ package enma.proven.ffinder.entities.persistence;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import enma.proven.ffinder.entities.AUser;
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,16 +31,16 @@ public class AUserADO {
     static final String SERVER_NAME = "localhost";
     static final int PORT = 3306;
     //local
-    /*static final String BD_URL = "jdbc:mysql://localhost:3306/fighterfinderdb";
+    static final String BD_URL = "jdbc:mysql://localhost:3306/fighterfinderdb";
     static final String USUARI = "standuser";
     static final String PASSWORD = "normal4321@";
-    static final String DB_NAME = "fighterfinderdb";*/
+    static final String DB_NAME = "fighterfinderdb";
     
     //school server
-    static final String BD_URL = "jdbc:mysql://localhost/dam16g4";
+    /*static final String BD_URL = "jdbc:mysql://localhost/dam16g4";
     static final String DB_NAME = "dam16g4";
     static final String USUARI = "dam16-g4";
-    static final String PASSWORD = "Oz5eim";
+    static final String PASSWORD = "Oz5eim";*/
     private MysqlDataSource dataSource;
     
     //SQL SENTENCES
@@ -65,7 +67,7 @@ public class AUserADO {
     static final String GET_USER_BY_EMAIL = "SELECT id, nick, email FROM `user` WHERE email = ?";
     private Logger myLogger;
     public AUserADO() {
-        //createLogger();
+        createLogger();
         prepareAndSetConection();
     }
     
@@ -959,7 +961,15 @@ public class AUserADO {
             //FileHandler myFileHandler = new FileHandler("..\\..\\..\\UserADOLog.log", true);
             
             //FileHandler myFileHandler = new FileHandler("logs\\UserADOLog.log", true);
-            FileHandler myFileHandler = new FileHandler("D:\\NetBeansProjects\\FighterFinderREST\\src\\java\\enma\\proven\\ffinder\\entities\\persistence\\logs\\UserADOLog.log", true);
+            //FileHandler myFileHandler = new FileHandler("D:\\NetBeansProjects\\FighterFinderREST\\src\\java\\enma\\proven\\ffinder\\entities\\persistence\\logs\\UserADOLog.log", true);
+            //File logFile = new File("\\logs\\UserADOLog.log");
+            //D:\NetBeansProjects\FighterFinderREST\src\java\enma\proven\ffinder\entities\persistence\AUserADO.java
+            /*String pathTest = new File("").getAbsolutePath();
+            String pathFile = pathTest+"\\logs";
+            String totalPath = pathTest+pathFile;*/
+            URL url = getClass().getResource("UserADOLog.log");
+            File logFile = new File(url.getPath());
+            FileHandler myFileHandler = new FileHandler(logFile.getAbsolutePath(), (2*1024*1024), 1, true);
             
             myFileHandler.setFormatter(new SimpleFormatter());
             myLogger = Logger.getLogger("enma.proven.ffinder.entities.persistence.logs.UserADOLog.log");
