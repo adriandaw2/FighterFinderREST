@@ -117,9 +117,10 @@ public class UserResource {
         aUserService = new UserService();
         Gson gson = new Gson(); 
         List<AUser> aList = aUserService.searchUserByNickname(nickToSearch);
-        String resultJson = gson.toJson(aList);
-        //return Response.ok(result).build();
-        return Response.ok().entity(resultJson).build();
+        HashMap<String, List<AUser>> aMap = new HashMap();
+        aMap.put("resultUserByNick", aList);
+        String jsonResult = gson.toJson(aMap);
+        return Response.ok().entity(jsonResult).build();
     }
     
     /**
@@ -136,8 +137,10 @@ public class UserResource {
         aUserService = new UserService();
         Gson gson = new Gson();
         List<AUser> aList = aUserService.searchUserByGame(gameToSearch);
-        String resultJson = gson.toJson(aList);
-        return Response.ok().entity(resultJson).build();
+        HashMap<String, List<AUser>> aMap = new HashMap();
+        aMap.put("resultUserByGame", aList);
+        String jsonResult = gson.toJson(aMap);
+        return Response.ok().entity(jsonResult).build();
     }
     
     /**
@@ -154,8 +157,10 @@ public class UserResource {
         aUserService = new UserService();
         Gson gson = new Gson();
         List<AUser> aList = aUserService.getAllUserFav(uID);
-        String resultJson = gson.toJson(aList);
-        return Response.ok().entity(resultJson).build();
+        HashMap<String, List<AUser>> aMap = new HashMap();
+        aMap.put("resultUserFavs", aList);
+        String jsonResult = gson.toJson(aMap);
+        return Response.ok().entity(jsonResult).build();
     }
     
     /**
@@ -270,7 +275,18 @@ public class UserResource {
         aUserService = new UserService();
         int result = 0;
         result = aUserService.activateUserAccount(uMail);
-        return Response.ok().build();
+        String msgRes = "";
+        if(result == -1)
+        {
+            msgRes = "Server is under mantenaince.";
+        }
+        else if(result == 0)
+        {
+            msgRes = "User already active";
+        }else{
+            msgRes = "You can now log into FighterFinder";
+        }
+        return Response.ok(msgRes).build();
     }
     
     /**
@@ -286,7 +302,18 @@ public class UserResource {
         aUserService = new UserService();
         int result = 0;
         result = aUserService.deactivateUserAccount(uMail);
-        return Response.ok().build();
+        String msgRes = "";
+        if(result == -1)
+        {
+            msgRes = "Server is under mantenaince.";
+        }
+        else if(result == 0)
+        {
+            msgRes = "User already deactive";
+        }else{
+            msgRes = "Your account is now deactivated";
+        }
+        return Response.ok(msgRes).build();
     }
     
     

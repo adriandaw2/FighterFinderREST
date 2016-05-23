@@ -60,6 +60,7 @@ public class AUserADO {
     static final String GET_USER_BY_SKILL = "SELECT * FROM `user` WHERE skill = ? ORDER BY nick";
     static final String GET_USER_BY_SKILL_GREATER_SAME = "SELECT * FROM `user` WHERE skill >= ? ORDER BY nick";
     static final String GET_USER_BY_SKILL_LOWER_SAME = "SELECT * FROM `user` WHERE skill <= ? ORDER BY nick";
+    static final String GET_USER_BY_NICK_AND_SKILL = "SELECT id, nick, skill, ubication, showinmap FROM `user` WHERE nick LIKE ? AND skill LIKE ? ORDER BY nick";
     //EMAIL STUFF
     static final String CHECK_USER_AVAIBLE = "SELECT avaible FROM `user` WHERE email = ?";
     static final String ACTIVATE_ACC = "UPDATE `user` SET avaible = 1 WHERE email = ?";

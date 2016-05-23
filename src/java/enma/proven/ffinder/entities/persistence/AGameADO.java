@@ -52,7 +52,7 @@ public class AGameADO {
     private Logger myLogger;
     
     public AGameADO() {
-        //createLogger();
+        createLogger();
         prepareAndSetConection();
     }
     
