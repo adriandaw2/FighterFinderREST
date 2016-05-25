@@ -144,6 +144,26 @@ public class UserResource {
     }
     
     /**
+     * searchUserBySkill
+     * Function to get all the results from the search query
+     * @param skillLevel
+     * @return Response
+     */
+    @Path("searchUserBySkill")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response searchUserBySkill(@FormParam("skillLevel") int skillLevel)
+    {
+        aUserService = new UserService();
+        Gson gson = new Gson();
+        List<AUser> aList = aUserService.searchUSkillSame(skillLevel);
+        HashMap<String, List<AUser>> aMap = new HashMap();
+        aMap.put("resultUserBySkil", aList);
+        String jsonResult = gson.toJson(aMap);
+        return Response.ok().entity(jsonResult).build();
+    }
+    
+    /**
      * getAllUserFavs
      * Function to get all the user favs
      * @param uID
