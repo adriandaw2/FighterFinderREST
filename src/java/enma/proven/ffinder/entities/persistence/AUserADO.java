@@ -54,6 +54,7 @@ public class AUserADO {
     static final String MOD_USER = "UPDATE `user` SET nick = ?, password = ?, ubication = ?, id_objective = ? WHERE id = ?";
     static final String CHANGE_USER_PASS_EMAIL = "UPDATE `user` SET password = ? WHERE email = ?";
     static final String CHANGE_CURRENT_USER_PASS = "UPDATE `user` SET password = ? WHERE id = ?";
+    static final String CHECK_USER_FAV_EXIST = "SELECT * FROM `user_user_fav` WHERE user_id = ? AND user_added_fav = ?";
     static final String ADD_USER_TO_FAV = "INSERT INTO `user_user_fav` (user_id, user_added_fav) VALUES (?, ?)";
     static final String DELETE_USER_FROM_FAV = "DELETE FROM `user_user_fav` WHERE user_id = ? AND user_added_fav = ?";
     static final String GET_USER_FAVS = "SELECT DISTINCT u.id, u.nick, u.skill, u.ubication, u.id_profile, u.avaible, u.showinmap, u.glat, u.glon, u.id_objective FROM `user` u INNER JOIN `user_user_fav` uf ON u.id IN (SELECT ufs.user_added_fav FROM `user_user_fav` ufs WHERE ufs.user_id = ?) ORDER BY u.nick";
@@ -61,6 +62,7 @@ public class AUserADO {
     static final String GET_USER_BY_SKILL_GREATER_SAME = "SELECT * FROM `user` WHERE skill >= ? ORDER BY nick";
     static final String GET_USER_BY_SKILL_LOWER_SAME = "SELECT * FROM `user` WHERE skill <= ? ORDER BY nick";
     static final String GET_USER_BY_NICK_AND_SKILL = "SELECT id, nick, skill, ubication, showinmap FROM `user` WHERE nick LIKE ? AND skill LIKE ? ORDER BY nick";
+    
     //SKILL stuff
     static final String RATE_USER_SKILL = "INSERT INTO `user_skill_rates` (user_id_who_rate, user_rated, skill_rate) VALUES (?, ?, ?)";
     static final String UPDATE_RATE_USER_SKILL = "UPDATE `user_skill_rates` SET skill_rate = ? WHERE user_id_who_rate = ? AND user_rated = ?";
@@ -507,29 +509,39 @@ public class AUserADO {
     {
         //check if relation already exist
         int result = 0;
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        try{
-            conn = dataSource.getConnection();
-            pstmt = conn.prepareStatement(ADD_USER_TO_FAV);
-            pstmt.setInt(1, uID);
-            pstmt.setInt(2, uToAddID);
-            result = pstmt.executeUpdate();
-        }catch(SQLException ex)
+        int uIsFav = checkIfUserIsFav(uID, uToAddID);
+        if(uIsFav == 0)
         {
-            result = -1;
-            myLogger.log(Level.INFO, "Exception trying to add a new favorite user: {0}", ex.getMessage());
-        }finally{
+            
+            Connection conn = null;
+            PreparedStatement pstmt = null;
             try{
-                conn.close();
-                pstmt.close();
+                conn = dataSource.getConnection();
+                pstmt = conn.prepareStatement(ADD_USER_TO_FAV);
+                pstmt.setInt(1, uID);
+                pstmt.setInt(2, uToAddID);
+                result = pstmt.executeUpdate();
             }catch(SQLException ex)
             {
-                //System.out.println("Could not close all the DB stuff");
                 result = -1;
-                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
+                myLogger.log(Level.INFO, "Exception trying to add a new favorite user: {0}", ex.getMessage());
+            }finally{
+                try{
+                    conn.close();
+                    pstmt.close();
+                }catch(SQLException ex)
+                {
+                    //System.out.println("Could not close all the DB stuff");
+                    result = -1;
+                    myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
+                }
             }
         }
+        else
+        {
+            result = -1;
+        }
+        
         return result;
     }
     
@@ -925,6 +937,49 @@ public class AUserADO {
             //ex.printStackTrace(System.out);
             aRes = -1;
             myLogger.log(Level.INFO, "Exception trying to check if the user "+aEmail+"exist by email : {0}",  ex.getMessage());
+        }
+        finally{
+            try {
+                pstmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                //System.out.println("Could not close all the DB stuff");
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
+            } 
+        }
+        return aRes;
+    }
+    
+    /**
+     * checkIfUserIsFav
+     * Function to check if the user is already a fav
+     * @param uID
+     * @param uToFav
+     * @return int
+     */
+    private int checkIfUserIsFav(int uID, int uToFav)
+    {
+        int aRes = -1;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(CHECK_USER_FAV_EXIST);
+            pstmt.setInt(1, uID);
+            pstmt.setInt(2, uToFav);
+            rs = pstmt.executeQuery();
+            aRes = 0;
+            while(rs.next())
+            {
+                aRes = 1;
+            }
+        }catch(SQLException ex)
+        {
+            //ex.printStackTrace(System.out);
+            aRes = -1;
+            myLogger.log(Level.INFO, "Exception trying to check if the user with ID->"+uToFav+"is already a fav to user with ID->"+uID+" : {0}",  ex.getMessage());
         }
         finally{
             try {
