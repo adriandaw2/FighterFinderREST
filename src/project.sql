@@ -169,6 +169,21 @@ END; $$
 
 DELIMITER ;
 
+DELIMITER $$
+CREATE TRIGGER after_update_skill_rate AFTER UPDATE 
+	ON `user_skill_rates` FOR EACH ROW
+
+BEGIN
+	
+	DECLARE mResult INT(1);
+	SELECT AVG(skill_rate) INTO mResult FROM `user_skill_rates` WHERE `user_rated` = NEW.user_rated;
+
+	UPDATE `user` SET `skill` = mResult WHERE `id` = NEW.user_rated;
+
+END; $$
+
+DELIMITER ;
+
 INSERT INTO `profile` (profiletype) VALUES
 	('admin'), ('user');
 

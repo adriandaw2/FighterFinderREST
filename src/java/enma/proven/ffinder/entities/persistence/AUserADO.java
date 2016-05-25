@@ -61,6 +61,10 @@ public class AUserADO {
     static final String GET_USER_BY_SKILL_GREATER_SAME = "SELECT * FROM `user` WHERE skill >= ? ORDER BY nick";
     static final String GET_USER_BY_SKILL_LOWER_SAME = "SELECT * FROM `user` WHERE skill <= ? ORDER BY nick";
     static final String GET_USER_BY_NICK_AND_SKILL = "SELECT id, nick, skill, ubication, showinmap FROM `user` WHERE nick LIKE ? AND skill LIKE ? ORDER BY nick";
+    //SKILL stuff
+    static final String RATE_USER_SKILL = "INSERT INTO `user_skill_rates` (user_id_who_rate, user_rated, skill_rate) VALUES (?, ?, ?)";
+    static final String UPDATE_RATE_USER_SKILL = "UPDATE `user_skill_rates` SET skill_rate = ? WHERE user_id_who_rate = ? AND user_rated = ?";
+    static final String CHECK_USER_ALREADY_RATED = "SELECT * FROM `user_skill_rates` WHERE user_id_who_rate = ? AND user_rated = ?";
     //EMAIL STUFF
     static final String CHECK_USER_AVAIBLE = "SELECT avaible FROM `user` WHERE email = ?";
     static final String ACTIVATE_ACC = "UPDATE `user` SET avaible = 1 WHERE email = ?";
@@ -698,6 +702,105 @@ public class AUserADO {
         return aList;
     }
     
+    /**
+     * rateUserSkill
+     * Function to rate user skill
+     * @param uWhoRate
+     * @param uRated
+     * @param skillRate
+     * @return int
+     */
+    public int rateUserSkill(int uWhoRate, int uRated, int skillRate)
+    {
+        int aRes = checkIfUserIsRated(uWhoRate, uRated);
+        int result = -1;
+        if(aRes == 1)
+        {
+            result = updateSkillRate(uWhoRate, uRated, skillRate);
+        }
+        else if(aRes == 0)
+        {
+            //insert skillrate
+            result = insertNewSkillRate(uWhoRate, uRated, skillRate);
+        }
+        else
+        {
+            result = aRes;
+        }
+        return result;
+    }
+    
+    /**
+     * updateSkillRate
+     * Function to update the rate of that user
+     * @param uWhoRate
+     * @param uRated
+     * @param skillRate
+     * @return int
+     */
+    private int updateSkillRate(int uWhoRate, int uRated, int skillRate)
+    {
+        int result = 0;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(UPDATE_RATE_USER_SKILL);
+            pstmt.setInt(1, skillRate);
+            pstmt.setInt(2, uWhoRate);
+            pstmt.setInt(3, uRated);
+            result = pstmt.executeUpdate();
+        }catch(SQLException ex)
+        {
+            myLogger.log(Level.INFO, "Exception trying to get user by same or lower skill level: {0}", ex.getMessage());
+        }finally{
+            try{
+                conn.close();
+                pstmt.close();
+            }catch(SQLException ex)
+            {
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
+            }
+        }
+        return result;
+    }
+    
+    
+    /**
+     * insertNewSkillRate
+     * Function to insert the rate of that user
+     * @param uWhoRate
+     * @param uRated
+     * @param skillRate
+     * @return int
+     */
+    private int insertNewSkillRate(int uWhoRate, int uRated, int skillRate)
+    {
+        int result = 0;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(RATE_USER_SKILL);
+            pstmt.setInt(1, uWhoRate);
+            pstmt.setInt(2, uRated);
+            pstmt.setInt(3, skillRate);
+            result = pstmt.executeUpdate();
+        }catch(SQLException ex)
+        {
+            myLogger.log(Level.INFO, "Exception trying to get user by same or lower skill level: {0}", ex.getMessage());
+        }finally{
+            try{
+                conn.close();
+                pstmt.close();
+            }catch(SQLException ex)
+            {
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
+            }
+        }
+        return result;
+    }
+    
     //CHECKING METHODS
     
     /**
@@ -762,7 +865,7 @@ public class AUserADO {
      * @param uMail
      * @return int
      */
-    public int checkUserIsActive(String uMail)
+    private int checkUserIsActive(String uMail)
     {
         int aRes = -1;
         Connection conn = null;
@@ -822,6 +925,51 @@ public class AUserADO {
             //ex.printStackTrace(System.out);
             aRes = -1;
             myLogger.log(Level.INFO, "Exception trying to check if the user "+aEmail+"exist by email : {0}",  ex.getMessage());
+        }
+        finally{
+            try {
+                pstmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                //System.out.println("Could not close all the DB stuff");
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
+            } 
+        }
+        return aRes;
+    }
+    
+    /**
+     * checkIfUserIsRated
+     * Function to check if the user is already rated, then, if it's rated, change the new skill level
+     * Will return a 1 if the user is rated already, a 0 if not, and -1 if server is wrong
+     * @param uWhoRate
+     * @param uRated
+     * @param newSkill
+     * @return int
+     */
+    private int checkIfUserIsRated(int uWhoRate, int uRated)
+    {
+        int aRes = -1;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(CHECK_USER_ALREADY_RATED);
+            pstmt.setInt(1, uWhoRate);
+            pstmt.setInt(2, uRated);
+            rs = pstmt.executeQuery();
+            aRes = 0;
+            while(rs.next())
+            {
+                aRes = 1;
+            }
+        }catch(SQLException ex)
+        {
+            //ex.printStackTrace(System.out);
+            aRes = -1;
+            myLogger.log(Level.INFO, "Exception trying to check if the user with ID->"+uRated+" is already rated by user with ID->"+uWhoRate+": {0}",  ex.getMessage());
         }
         finally{
             try {

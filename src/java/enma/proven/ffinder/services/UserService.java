@@ -289,6 +289,21 @@ public class UserService {
     }
     
     /**
+     * rateUSkill
+     * Function to rate user skill
+     * @param uWhoRate
+     * @param uRated
+     * @param skillRate
+     * @return int
+     */
+    public int rateUSkill(int uWhoRate, int uRated, int skillRate)
+    {
+        int result = this.myADO.rateUserSkill(uWhoRate, uRated, skillRate);
+        
+        return result;
+    }
+    
+    /**
      * generateRandomPassword
      * Function that return a random password
      * @return String

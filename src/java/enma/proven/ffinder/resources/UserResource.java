@@ -158,9 +158,27 @@ public class UserResource {
         Gson gson = new Gson();
         List<AUser> aList = aUserService.searchUSkillSame(skillLevel);
         HashMap<String, List<AUser>> aMap = new HashMap();
-        aMap.put("resultUserBySkil", aList);
+        aMap.put("resultUserBySkill", aList);
         String jsonResult = gson.toJson(aMap);
         return Response.ok().entity(jsonResult).build();
+    }
+    
+    /**
+     * rateUSkill
+     * Function to rate a user skill
+     * @param uWhoRate
+     * @param uRated
+     * @param skillRate
+     * @return Response
+     */
+    @POST
+    @Path("rateUSkill")
+    public Response rateUSkill(@FormParam("uWhoRate")int uWhoRate, @FormParam("uRated") int uRated, @FormParam("skillRate") int skillRate)
+    {
+        int result = 0;
+        aUserService = new UserService();
+        result = aUserService.rateUSkill(uWhoRate, uRated, skillRate);
+        return Response.ok(result).build();
     }
     
     /**
