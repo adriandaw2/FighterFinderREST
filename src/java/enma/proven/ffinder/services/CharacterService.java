@@ -21,6 +21,19 @@ public class CharacterService {
     }
     
     /**
+     * getAllCharacterFromGame
+     * Function to get all the characters from a game
+     * @param aGameID
+     * @retun List<ACharacter>
+     */
+    public List<ACharacter> getAllCharacterFromGame(int aGameID)
+    {
+        List<ACharacter> aCharList = this.myADO.getAllCharactersFromGame(aGameID);
+        return aCharList;
+    }
+    
+    
+    /**
      * getAllCharacterUserUseFromGame
      * Function to get all the character from one game
      * @param aGameID

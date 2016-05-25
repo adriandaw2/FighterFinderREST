@@ -39,6 +39,27 @@ public class CharacterResource {
     
     
     /**
+     * getAllCharactersFromGame
+     * Function to get all the game characters
+     * @param aGameID
+     * @return Response
+     */
+    @Path("getAllCharactersFromGame")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllCharactersFromGame(@FormParam("gameID") int aGameID)
+    {
+        aCharService = new CharacterService();
+        Gson gson = new Gson();
+        List<ACharacter> aList = aCharService.getAllCharacterFromGame(aGameID);
+        HashMap<String, List<ACharacter>> aMap = new HashMap();
+        aMap.put("allCharactersFromGame", aList);
+        String jsonResult = gson.toJson(aMap);
+        return Response.ok().entity(jsonResult).build();       
+    }
+    
+    
+    /**
      * getCharacterFromDatabaseUserUse
      * Function to return all the character from one game
      * @param aGameID
