@@ -62,7 +62,9 @@ public class AUserADO {
     static final String GET_USER_BY_SKILL_GREATER_SAME = "SELECT * FROM `user` WHERE skill >= ? ORDER BY nick";
     static final String GET_USER_BY_SKILL_LOWER_SAME = "SELECT * FROM `user` WHERE skill <= ? ORDER BY nick";
     static final String GET_USER_BY_NICK_AND_SKILL = "SELECT id, nick, skill, ubication, showinmap FROM `user` WHERE nick LIKE ? AND skill LIKE ? ORDER BY nick";
-    
+    //RECOMMEND STUFF
+    static final String ADD_NEW_RECOMMEND = "INSERT INTO `user_user_recommend` (user_who_rec, user_to_rec, user_recommended) VALUES (?, ?, ?)";
+    static final String GET_ALL_RECOMMENDS = "SELECT DISTINCT u.id, u.nick, u.skill, u.id_profile, u.avaible FROM `user` u INNER JOIN `user_user_recommend` ur ON u.id IN (SELECT urs.user_recommended FROM `user_user_recommend` urs WHERE urs.user_to_rec = ?) ORDER BY u.nick";
     //SKILL stuff
     static final String RATE_USER_SKILL = "INSERT INTO `user_skill_rates` (user_id_who_rate, user_rated, skill_rate) VALUES (?, ?, ?)";
     static final String UPDATE_RATE_USER_SKILL = "UPDATE `user_skill_rates` SET skill_rate = ? WHERE user_id_who_rate = ? AND user_rated = ?";
@@ -651,6 +653,93 @@ public class AUserADO {
                     //AUser(int id, String nick, String email, String ubication, int skill, boolean avaible, boolean showinmap, float glat, float glon, int idObjective) {
                     aU = new AUser(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(5), rs.getInt(6), rs.getBoolean(7),
                             rs.getBoolean(8), rs.getFloat(9), rs.getFloat(10), rs.getInt(12));
+                    aList.add(aU);
+                }
+            }
+        }catch(SQLException ex)
+        {
+            myLogger.log(Level.INFO, "Exception trying to get user by same or greater skill level: {0}", ex.getMessage());
+        }finally{
+            try{
+                conn.close();
+                pstmt.close();
+                rs.close();
+            }catch(SQLException ex)
+            {
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
+            }
+        }
+        return aList;
+    }
+    
+    
+    /**
+     * addNewReco
+     * Function to add a new recommendation
+     * @param uIDWhoRec
+     * @param uIDToRec
+     * @param uIDRecommended
+     * @return result
+     */
+    public int addNewReco(int uIDWhoRec, int uIDToRec, int uIDRecommended)
+    {
+        int result = 0;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(ADD_NEW_RECOMMEND);
+            pstmt.setInt(1, uIDWhoRec);
+            pstmt.setInt(2, uIDToRec);
+            pstmt.setInt(3, uIDRecommended);
+            result = pstmt.executeUpdate();
+        }catch(SQLException ex)
+        {
+            result = -1;
+            myLogger.log(Level.INFO, "Exception trying to add a new recommendation: {0}", ex.getMessage());
+        }finally{
+            try{
+                conn.close();
+                pstmt.close();
+            }catch(SQLException ex)
+            {
+                //System.out.println("Could not close all the DB stuff");
+                result = -1;
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
+            }
+        }
+        return result;
+    }
+    
+    /**
+     * getPlayerRecommendations
+     * Function to get all the player recommendatios
+     * @param uID
+     * @return List<AUser>
+     */
+    public List<AUser> getPlayerRecommendations(int uID)
+    {
+        List<AUser> aList = new ArrayList();
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        AUser aU = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(GET_ALL_RECOMMENDS);
+            pstmt.setInt(1, uID);
+            rs = pstmt.executeQuery();
+            while(rs.next())
+            {
+                int test1 = rs.getInt(4);
+                boolean test2 = rs.getBoolean(5);
+                if(test1!= 1)
+                {
+                    //AUser(int id, String nick, String email, String ubication, int skill, boolean avaible, boolean showinmap, float glat, float glon, int idObjective) {
+                    aU = new AUser();
+                    aU.setId(rs.getInt(1));
+                    aU.setNick(rs.getString(2));
+                    aU.setSkill(rs.getInt(3));
                     aList.add(aU);
                 }
             }

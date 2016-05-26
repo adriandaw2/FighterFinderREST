@@ -124,7 +124,10 @@ public class AEmail {
             throw new RuntimeException(ex);
         }
     }
-
+    
+    /**
+     * 
+     */
     public void sendEmailRandomPassword(String nick, String password) {
         try{
             //link to activate the account

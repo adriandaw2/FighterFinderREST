@@ -202,6 +202,44 @@ public class UserResource {
     }
     
     /**
+     * addNewRecommendation
+     * Function to add a new recommendation
+     * @param uWhoReco
+     * @param uToReco
+     * @param uRecommended
+     * @return Response
+     */
+    @POST
+    @Path("addNewReco")
+    public Response addNewRecommendation(@FormParam("uWhoReco") int uWhoReco, @FormParam("uToReco") int uToReco, @FormParam("uRecommended") int uRecommended)
+    {
+        aUserService = new UserService();
+        int result = aUserService.addNewRecomendation(uWhoReco, uToReco, uRecommended);
+        
+        return Response.ok(result).build();
+    }
+    
+    /**
+     * getAllRecommendations
+     * Function to get all the player recommendations
+     * @param uID
+     * @return Response
+     */
+    @POST
+    @Path("getAllReco")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllRecommendations(@FormParam("userid") int uID)
+    {
+        aUserService = new UserService();
+        Gson gson = new Gson();
+        List<AUser> aList = aUserService.getAllRecommendations(uID);
+        HashMap<String, List<AUser>> aMap = new HashMap();
+        aMap.put("resultUserReco", aList);
+        String jsonResult = gson.toJson(aMap);
+        return Response.ok().entity(jsonResult).build();
+    }
+    
+    /**
      * addUserToFav
      * Function to add a user to a user favorite list
      * @param uID

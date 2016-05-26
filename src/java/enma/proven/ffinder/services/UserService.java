@@ -234,6 +234,35 @@ public class UserService {
         return result;
     }
     
+    
+    /**
+     * addNewRecomendation
+     * Function to add a new recommendation
+     * @param uWhoRec
+     * @param uToRec
+     * @param uRecommended
+     * @return int
+     */
+    public int addNewRecomendation(int uWhoRec, int uToRec, int uRecommended)
+    {
+        int result = this.myADO.addNewReco(uWhoRec, uToRec, uRecommended);
+        
+        return result;
+    }
+    
+    /**
+     * getAllRecommendations
+     * Function to get all the recommendations
+     * @param uID
+     * @return List<AUser>
+     */
+    public List<AUser> getAllRecommendations(int uID)
+    {
+        List<AUser> aList = this.myADO.getPlayerRecommendations(uID);
+        
+        return aList;
+    }
+    
     /**
      * getAllUserFav
      * Function to get all the user fabs

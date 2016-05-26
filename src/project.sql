@@ -72,6 +72,12 @@ CREATE TABLE `user_user_fav`(
         user_added_fav INT(6)
 )ENGINE=InnoDB;
 
+CREATE TABLE `user_user_recommend`(
+        user_who_rec INT(6),
+        user_to_rec INT(6),
+        user_recommended INT(6)
+)ENGINE=InnoDB;
+
 GRANT UPDATE, DELETE ON fighterfinderdb.`user` TO 'standuser'@'localhost' IDENTIFIED BY 'normal4321@';
 GRANT UPDATE, DELETE ON fighterfinderdb.`user` TO 'standuser'@'%' IDENTIFIED BY 'normal4321@';
 GRANT UPDATE, DELETE ON fighterfinderdb.`user_game` TO 'standuser'@'localhost' IDENTIFIED BY 'normal4321@';
@@ -109,6 +115,9 @@ ALTER TABLE `user_skill_rates`
 
 ALTER TABLE `user_user_fav`
         ADD PRIMARY KEY (user_id, user_added_fav);
+
+ALTER TABLE `user_user_recommend`
+        ADD PRIMARY KEY (user_who_rec, user_to_rec, user_recommended);
 
 ALTER TABLE `user`
 	ADD FOREIGN KEY (id_objective) REFERENCES `objective` (id),
@@ -152,6 +161,11 @@ ALTER TABLE `user_skill_rates`
 ALTER TABLE `user_user_fav`
         ADD FOREIGN KEY (user_id) REFERENCES `user` (id),
         ADD FOREIGN KEY (user_added_fav) REFERENCES `user` (id);
+
+ALTER TABLE `user_user_recommend`
+        ADD FOREIGN KEY (user_who_rec) REFERENCES `user` (id),
+        ADD FOREIGN KEY (user_to_rec) REFERENCES `user` (id),
+        ADD FOREIGN KEY (user_recommended) REFERENCES `user` (id);
 
 /*TRIGGER*/	
 DELIMITER $$
