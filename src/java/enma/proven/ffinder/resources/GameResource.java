@@ -58,6 +58,25 @@ public class GameResource {
     }
     
     /**
+     * getOneGameInfo
+     * Function tog et one game info
+     * @param gID
+     * @return Respone
+     */
+    public Response getOneGameInfo(@FormParam("gameid") int gID)
+    {
+        aGameService = new GameService();
+        //Collection<AGame> allGamesList = aGameService.getAllGamesFromDatabase();
+        //GenericEntity<Collection<AGame>> result = new GenericEntity<Collection<AGame>>(allGamesList){};
+        Gson gson = new Gson();
+        AGame aG = aGameService.getOneGameInfo(gID);
+        HashMap<String, AGame> aMap = new HashMap();
+        aMap.put("gameResult", aG);
+        String jsonResult = gson.toJson(aMap);
+        return Response.ok().entity(jsonResult).build();
+    }
+    
+    /**
      * getGamesUserDontPlayFromDatabase
      * Function to get all the games the user don't in the database
      * @param uID

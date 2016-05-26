@@ -30,6 +30,19 @@ public class ObjectiveService {
         this.myADO = new AObjectiveADO();
     }
     
+    
+    /**
+     * getOneObjective
+     * Function to get one objective info
+     * @param oID
+     * @return AObjective
+     */
+    public AObjective getOneObjective(int oID)
+    {
+        AObjective aO = this.myADO.getOneObjective(oID);
+        
+        return aO;
+    }
     /**
      * getAllObjectives
      * Function to get all the objectives, this function MUST return always a list of objectives

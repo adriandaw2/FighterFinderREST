@@ -33,7 +33,25 @@ public class ObjectiveResource {
     public ObjectiveResource(@Context ServletContext context) {
     }
     
-    
+    /**
+     * getOneObjective
+     * Function to get one objective information
+     * @param oID
+     * @return Response
+     */
+    @POST
+    @Path("getOneObj")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getOneObjective(@FormParam("objectiveid") int oID)
+    {
+        Gson gson = new Gson();
+        aObjService = new ObjectiveService();
+        HashMap<String, AObjective> aMap = new HashMap();
+        AObjective aO = aObjService.getOneObjective(oID);
+        aMap.put("resultObj", aO);
+        String jsonString = gson.toJson(aMap);
+        return Response.ok().entity(jsonString).build();
+    }
     /**
      * getAllObjectives
      * Function to get all the objectives

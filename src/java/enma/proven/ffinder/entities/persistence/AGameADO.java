@@ -44,6 +44,7 @@ public class AGameADO {
     
     //SQL SENTENCES
     static final String GET_ALL_GAMES= "SELECT * FROM game ORDER BY name";
+    static final String GET_ONE_GAME = "SELECT * FROM `game` WHERE id = ?";
     static final String GET_GAMES_USER_PLAY = "SELECT DISTINCT g.id, g.name FROM `game` g JOIN `user_game` ug ON g.id IN (SELECT ugs.game_id FROM `user_game` ugs WHERE ugs.user_id = ?) ORDER BY g.name";
     static final String GET_GAMES_USER_DONT_PLAY = "SELECT DISTINCT g.id, g.name FROM `game` g JOIN `user_game` ug ON g.id NOT IN (SELECT ugs.game_id FROM `user_game` ugs WHERE ugs.user_id = ?) ORDER BY g.name";
     static final String ADD_GAME_TO_USER = "INSERT INTO `user_game` (user_id, game_id) VALUES (?, ?)";
@@ -73,6 +74,46 @@ public class AGameADO {
         dataSource.setServerName(SERVER_NAME);
         dataSource.setPort(PORT);
         dataSource.setDatabaseName(DB_NAME);
+    }
+    
+    /**
+     * getOneGameInfo
+     * Function to get the info of one game
+     * @param gID
+     * @return AGame
+     */
+    public AGame getOneGameInfo(int gID)
+    {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        AGame aG = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(GET_ONE_GAME);
+            pstmt.setInt(1, gID);
+            rs = pstmt.executeQuery();
+            while(rs.next())
+            {
+                aG = new AGame(rs.getInt(1), rs.getString(2));
+            }
+        }catch(SQLException ex)
+        {
+            //ex.printStackTrace(System.out);
+            myLogger.log(Level.INFO, "Exception trying to get all the info from game with ID->"+gID+": {0}", ex.getMessage());
+        }
+        finally{
+                try {
+                    pstmt.close();
+                    conn.close();
+                    rs.close();
+                } catch (SQLException ex) {
+                    //System.out.println("Could not close all the DB stuff");
+                    myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
+                } 
+            }
+        
+        return aG;
     }
     
     /**

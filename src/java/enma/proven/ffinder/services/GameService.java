@@ -19,6 +19,20 @@ public class GameService {
     public GameService() {
         myADO = new AGameADO();
     }
+    
+    /**
+     * getOneGameInfo
+     * Function to get one game info
+     * @param gID
+     * @return AGame
+     */
+    public AGame getOneGameInfo(int gID)
+    {
+        AGame aG = this.myADO.getOneGameInfo(gID);
+        
+        return aG;
+    }
+    
     /**
      * getAllGamesFromDatabase
      * Function to call the ADO and return a list of all the games

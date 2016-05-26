@@ -41,6 +41,7 @@ public class AObjectiveADO {
     private Logger myLogger;
     //SQL SENTENCES
     static final String GET_ALL_OBJECTIVES = "SELECT * FROM `objective`";
+    static final String GET_ONE_OBJECTIVE = "SELECT * FROM `objective` WHERE id = ?";
     static final String ADD_NEW_OBJECTIVE = "INSERT INTO `objective` (message) VALUES (?)";
     static final String UPDATE_OBJECTIVE = "UPDATE `objective` SET message = ? WHERE id = ?";
     public AObjectiveADO(){
@@ -65,6 +66,46 @@ public class AObjectiveADO {
         dataSource.setDatabaseName(DB_NAME);
     }
     
+    
+    /**
+     * getOneObjective
+     * Function to get all the info of one objective
+     * @param oID
+     * @return AObjective
+     */
+    public AObjective getOneObjective(int oID)
+    {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        AObjective aO = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(GET_ONE_OBJECTIVE);
+            pstmt.setInt(1, oID);
+            rs = pstmt.executeQuery();
+            while(rs.next())
+            {
+                aO = new AObjective(rs.getInt(1), rs.getString(2));
+            }
+        }catch(SQLException ex)
+        {
+            //ex.printStackTrace(System.out);
+            //System.out.println("Error handling the data" + ex.getMessage());
+            myLogger.log(Level.INFO, "Exception trying to get all the objectives: {0}", ex.getMessage());
+        }finally{
+            try{
+                conn.close();
+                pstmt.close();
+                rs.close();
+            }catch(SQLException ex)
+            {
+                //System.out.println("Couldn't close al database stuff");
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
+            }
+        }
+        return aO;
+    }
     
     /**
      * getAllObjectives
