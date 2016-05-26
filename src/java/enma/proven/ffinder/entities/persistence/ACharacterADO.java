@@ -53,7 +53,7 @@ public class ACharacterADO {
     static final String ADD_CHARACTER_TO_USER = "INSERT INTO `user_character` (user_id, character_id) VALUES (?, ?)";
     static final String DELETE_CHARACTER_USER = "DELETE FROM `user_character` WHERE user_id = ? AND character_id = ?";
     static final String ADD_CHARACTER_TO_GAME = "INSERT INTO `character` (name, id_game) VALUES (?, ?)";
-    static final String UPDATE_CHARACTER_INFO = "UPDATE `character` SET name = ? WHERE id = ?";
+    static final String UPDATE_CHARACTER_INFO = "UPDATE `character` SET name = ?, id_game = ? WHERE id = ?";
     
     private Logger myLogger;
     public ACharacterADO() {
@@ -282,10 +282,11 @@ public class ACharacterADO {
      * modCharacter
      * Function to modify a character in the database
      * @param nToMod
+     * @param nGameID
      * @param cID
      * @return int
      */
-    public int modCharacter(String nToMod, int cID)
+    public int modCharacter(String nToMod, int nGameID, int cID)
     {
         int result = 0;
         Connection conn = null;
@@ -294,7 +295,8 @@ public class ACharacterADO {
             conn = dataSource.getConnection();
             pstmt = conn.prepareStatement(UPDATE_CHARACTER_INFO);
             pstmt.setString(1, nToMod);
-            pstmt.setInt(2, cID);
+            pstmt.setInt(2, nGameID);
+            pstmt.setInt(3, cID);
             result = pstmt.executeUpdate();
         }catch(SQLException ex)
         {

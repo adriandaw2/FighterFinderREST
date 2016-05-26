@@ -180,15 +180,17 @@ public class CharacterResource {
      * modCharacter
      * Function to add a character to a game
      * @param cName
+     * @param nGameID
      * @param cID
      * @return Response
      */
     @POST
     @Path("modCharacter")
-    public Response modCharacter(@FormParam("cName") String cName, @FormParam("cID") int cID)
+    public Response modCharacter(@FormParam("cName") String cName, @FormParam("gameID") int nGameID, @FormParam("cID") int cID)
     {
         aCharService = new CharacterService();
-        int result = aCharService.modCharacterFromGame(cName, cID);
+        ACharacter aChar = new ACharacter(cID, cName, nGameID);
+        int result = aCharService.modCharacterFromGame(aChar);
         return Response.ok(result).build();
     }
     

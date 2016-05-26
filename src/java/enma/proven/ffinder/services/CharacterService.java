@@ -119,13 +119,12 @@ public class CharacterService {
     /**
      * modCharacterFromGame
      * Function to mod a character to a  game
-     * @param cName
-     * @param cID
+     * @param aChar
      * @return int
      */
-    public int modCharacterFromGame(String cName, int cID)
+    public int modCharacterFromGame(ACharacter aChar)
     {
-        int result = this.myADO.modCharacter(cName, cID);
+        int result = this.myADO.modCharacter(aChar.getName(), aChar.getIdGame(), aChar.getId());
         return result;
     }
     
