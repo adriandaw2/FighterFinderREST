@@ -63,6 +63,9 @@ public class GameResource {
      * @param gID
      * @return Respone
      */
+    @POST
+    @Path("getOneGameInfo")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getOneGameInfo(@FormParam("gameid") int gID)
     {
         aGameService = new GameService();
