@@ -65,6 +65,7 @@ public class AUserADO {
     //RECOMMEND STUFF
     static final String ADD_NEW_RECOMMEND = "INSERT INTO `user_user_recommend` (user_who_rec, user_to_rec, user_recommended) VALUES (?, ?, ?)";
     static final String GET_ALL_RECOMMENDS = "SELECT DISTINCT u.id, u.nick, u.skill, u.id_profile, u.avaible FROM `user` u INNER JOIN `user_user_recommend` ur ON u.id IN (SELECT urs.user_recommended FROM `user_user_recommend` urs WHERE urs.user_to_rec = ?) ORDER BY u.nick";
+    static final String CHECK_REC_EXIST = "SELECT * FROM `user_user_recommend` WHERE user_who_rec = ? AND user_to_rec = ? AND user_recommended = ?";
     //SKILL stuff
     static final String RATE_USER_SKILL = "INSERT INTO `user_skill_rates` (user_id_who_rate, user_rated, skill_rate) VALUES (?, ?, ?)";
     static final String UPDATE_RATE_USER_SKILL = "UPDATE `user_skill_rates` SET skill_rate = ? WHERE user_id_who_rate = ? AND user_rated = ?";
@@ -686,28 +687,37 @@ public class AUserADO {
         int result = 0;
         Connection conn = null;
         PreparedStatement pstmt = null;
-        try{
-            conn = dataSource.getConnection();
-            pstmt = conn.prepareStatement(ADD_NEW_RECOMMEND);
-            pstmt.setInt(1, uIDWhoRec);
-            pstmt.setInt(2, uIDToRec);
-            pstmt.setInt(3, uIDRecommended);
-            result = pstmt.executeUpdate();
-        }catch(SQLException ex)
+        int recoExist = checkIfUserIsRecommended(uIDWhoRec, uIDToRec, uIDRecommended);
+        if(recoExist == 0)
         {
-            result = -1;
-            myLogger.log(Level.INFO, "Exception trying to add a new recommendation: {0}", ex.getMessage());
-        }finally{
             try{
-                conn.close();
-                pstmt.close();
+                conn = dataSource.getConnection();
+                pstmt = conn.prepareStatement(ADD_NEW_RECOMMEND);
+                pstmt.setInt(1, uIDWhoRec);
+                pstmt.setInt(2, uIDToRec);
+                pstmt.setInt(3, uIDRecommended);
+                result = pstmt.executeUpdate();
             }catch(SQLException ex)
             {
-                //System.out.println("Could not close all the DB stuff");
                 result = -1;
-                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
+                myLogger.log(Level.INFO, "Exception trying to add a new recommendation: {0}", ex.getMessage());
+            }finally{
+                try{
+                    conn.close();
+                    pstmt.close();
+                }catch(SQLException ex)
+                {
+                    //System.out.println("Could not close all the DB stuff");
+                    result = -1;
+                    myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
+                }
             }
         }
+        else
+        {
+            result = -1;
+        }
+        
         return result;
     }
     
@@ -1114,6 +1124,51 @@ public class AUserADO {
             //ex.printStackTrace(System.out);
             aRes = -1;
             myLogger.log(Level.INFO, "Exception trying to check if the user with ID->"+uRated+" is already rated by user with ID->"+uWhoRate+": {0}",  ex.getMessage());
+        }
+        finally{
+            try {
+                pstmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                //System.out.println("Could not close all the DB stuff");
+                myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
+            } 
+        }
+        return aRes;
+    }
+    
+    /**
+     * checkIfUserIsRecommended
+     * Function to check if the recommendation already exist
+     * @param uIDWhoRec
+     * @param uIDToRec
+     * @param uIDRecommended
+     * @return result
+     */
+    private int checkIfUserIsRecommended(int uIDWhoRec, int uIDToRec, int uIDRecommended)
+    {
+        int aRes = -1;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(CHECK_REC_EXIST);
+            pstmt.setInt(1, uIDWhoRec);
+            pstmt.setInt(2, uIDToRec);
+            pstmt.setInt(3, uIDRecommended);
+            rs = pstmt.executeQuery();
+            aRes = 0;
+            while(rs.next())
+            {
+                aRes = 1;
+            }
+        }catch(SQLException ex)
+        {
+            //ex.printStackTrace(System.out);
+            aRes = -1;
+            myLogger.log(Level.INFO, "Exception trying to check if the user with ID->"+uIDRecommended+"is already recommended by user with ID->"+uIDWhoRec+" to user with ID->"+uIDToRec+": {0}",  ex.getMessage());
         }
         finally{
             try {
