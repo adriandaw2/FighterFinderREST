@@ -46,6 +46,7 @@ public class CharacterResource {
      */
     @POST
     @Path("getOneCharacterInfo")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getOneCharacterInfo(@FormParam("charid")int cID)
     {
         aCharService = new CharacterService();
