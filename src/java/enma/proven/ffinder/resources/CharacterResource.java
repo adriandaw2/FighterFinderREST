@@ -39,6 +39,25 @@ public class CharacterResource {
     
     
     /**
+     * getOneCharacterInfo
+     * Function to get one character info
+     * @param cID
+     * @return Response
+     */
+    @POST
+    @Path("getOneCharacterInfo")
+    public Response getOneCharacterInfo(@FormParam("charid")int cID)
+    {
+        aCharService = new CharacterService();
+        Gson gson = new Gson();
+        ACharacter aCh = aCharService.getOneCharacterInfo(cID);
+        HashMap<String, ACharacter> aMap = new HashMap();
+        aMap.put("charInfo", aCh);
+        String jsonResult = gson.toJson(aMap);
+        return Response.ok().entity(jsonResult).build();
+    }
+    
+    /**
      * getAllCharactersFromGame
      * Function to get all the game characters
      * @param aGameID

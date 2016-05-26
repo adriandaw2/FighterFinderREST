@@ -20,6 +20,20 @@ public class CharacterService {
         this.myADO = new ACharacterADO();
     }
     
+    
+    /**
+     * getOneCharacterInfo
+     * Funtion to get one character info
+     * @param cID
+     * @return ACharacter
+     */
+    public ACharacter getOneCharacterInfo(int cID)
+    {
+        ACharacter aCh = this.myADO.getOneCharacterInfo(cID);
+        
+        return aCh;
+    }
+    
     /**
      * getAllCharacterFromGame
      * Function to get all the characters from a game

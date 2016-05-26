@@ -46,7 +46,7 @@ public class AUserADO {
     //SQL SENTENCES
     static final String GET_USER = "SELECT * FROM `user` WHERE `nick` = ? AND `password` = ?";
     static final String GET_USER_BY_NICK_LIKE = "SELECT `user`.id, `user`.nick, `user`.skill, `user`.ubication, `user`.id_profile, `user`.avaible, `user`.showinmap, `user`.glat, `user`.glon, `objective`.message FROM `user` INNER JOIN `objective` ON `user`.id_objective=`objective`.id WHERE `user`.nick LIKE ? ORDER BY `user`.nick";
-    static final String GET_USER_BY_GAME = "SELECT DISTINCT u.id, u.nick, u.skill, u.ubication, u.id_profile, u.avaible, u.showinmap, u.glat, u.glon, u.id_objective FROM `user` u LEFT JOIN `user_game` ug ON u.id IN (SELECT ugs.user_id FROM `user_game` ugs WHERE ugs.game_id = ?) ORDER BY u.nick";
+    static final String GET_USER_BY_GAME = "SELECT DISTINCT u.id, u.nick, u.skill, u.ubication, u.id_profile, u.avaible, u.showinmap, u.glat, u.glon, u.id_objective FROM `user` u JOIN `user_game` ug ON u.id IN (SELECT ugs.user_id FROM `user_game` ugs WHERE ugs.game_id = ?) ORDER BY u.nick";
     static final String ADD_USER = "INSERT INTO `user` (nick, email, password) VALUES (?, ?, ?)";
     static final String CHECK_USER_NICK = "SELECT nick FROM `user` WHERE nick = ?";
     static final String CHECK_USER_EMAIL = "SELECT email FROM `user` WHERE email = ?";

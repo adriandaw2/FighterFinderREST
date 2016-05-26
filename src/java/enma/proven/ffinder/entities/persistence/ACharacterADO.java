@@ -46,6 +46,7 @@ public class ACharacterADO {
     
     //SQL SENTENCES
     static final String GET_GAME_CHARACTERS = "SELECT * FROM `character` WHERE id_game = ? ORDER BY name";
+    static final String GET_ONE_CHARARACTER = "SELECT * FROM `character` WHERE id = ?";
     static final String GET_GAME_NO_CHARACTER_USER = "SELECT DISTINCT c.id, c.name, c.id_game FROM `character` c JOIN `user_character` uc ON c.id NOT IN (SELECT ucs.character_id FROM `user_character` ucs WHERE ucs.user_id = ?) WHERE c.id_game = ? ORDER BY c.name";
     static final String GET_GAME_CHARACTER_USER = "SELECT DISTINCT c.id, c.name, c.id_game FROM `character` c JOIN `user_character` uc ON c.id IN (SELECT ucs.character_id FROM `user_character` ucs WHERE ucs.user_id = ?) WHERE c.id_game = ? ORDER BY c.name";
     //static final String GET_USER_CHARACTERS= "SELECT * FROM `user_`"
@@ -74,6 +75,46 @@ public class ACharacterADO {
         dataSource.setDatabaseName(DB_NAME);
     }
     
+    
+    /**
+     * getOneCharacterInfo
+     * Function to get all the info of one character
+     * @param cID
+     * @return AChar
+     */
+    public ACharacter getOneCharacterInfo(int cID)
+    {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        ACharacter aCh = null;
+        try{
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(GET_ONE_CHARARACTER);
+            pstmt.setInt(1, cID);
+            rs = pstmt.executeQuery();
+            while(rs.next())
+            {
+                aCh = new ACharacter(rs.getInt(1), rs.getString(2), rs.getInt(3));
+            }
+        }catch(SQLException ex)
+        {
+            //ex.printStackTrace(System.out);
+            myLogger.log(Level.INFO, "Exception trying to get all the info from character with ID->"+cID+": {0}", ex.getMessage());
+        }
+        finally{
+                try {
+                    pstmt.close();
+                    conn.close();
+                    rs.close();
+                } catch (SQLException ex) {
+                    //System.out.println("Could not close all the DB stuff");
+                    myLogger.log(Level.SEVERE, "Exception, could not close all the DB stuff: {0}", ex.getMessage());
+                } 
+            }
+        
+        return aCh;
+    }
     
     /**
      * getAllCharactersFromGame
