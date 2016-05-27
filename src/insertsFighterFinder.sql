@@ -8,9 +8,9 @@ INSERT INTO `objective` (message) VALUES
 	("Searching for friends"), ("Having fun"), ("Compete"), ("I want to be the very best");
 	
 INSERT INTO `user` (nick, email, password, skill, id_profile, id_objective) VALUES 
-	("FFAdmin", "ffadmin@gmail.com", "admin@pass1234", 5, 1, 1);
-INSERT INTO `user` (nick, email, password) VALUES
-        ("SomeTest", "sometest@gmail.com", "sometest1234"), ("Person", "personemail@gmail.com", "person1234"), ("Test1", "testemail@gmail.com", "test11234"), ("Test2", "test2email@gmail.com", "test21234"), ("Test0", "test0email@gmail.com", "test01234");
+	("FFAdmin", "ffadmin@gmail.com", "3f79b310fd818b69957b5798bbc0b6b8", 5, 1, 1);
+INSERT INTO `user` (nick, email, password, avaible) VALUES
+        ("SomeTest", "sometest@gmail.com", "931854564c1c5e2cb7b2c67e62317439", 1), ("Person", "personemail@gmail.com", "7635d0ea98cb4a73e6b97ad5d5e054e3", 1), ("Test1", "testemail@gmail.com", "f326a3530ff20c706d1bd98aa6521fc4", 1), ("Test2", "test2email@gmail.com", "5554dce37a915769b08d19c05ecaca8d", 0), ("Test0", "test0email@gmail.com", "9a52288e1fe8f340f74de73de17e0441", 0);
 
 INSERT INTO `character` (name, id_game) VALUES
 	("Ryu", 1), ("Ken", 1), ("Chun-Li", 1), ("Cammy", 1), ("Dhalsim", 1), ("M. Bison", 1), ("Vega", 1),  ("Zangief", 1), ("Nash", 1), ("Karin", 1), ("Birdie", 1), ("R. Mika", 1),
